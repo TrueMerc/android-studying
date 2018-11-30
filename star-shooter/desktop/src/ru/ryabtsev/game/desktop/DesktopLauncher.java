@@ -2,7 +2,7 @@ package ru.ryabtsev.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import ru.ryabtsev.game.StarShooter;
+import ru.ryabtsev.game.StarShooterGame;
 
 public class DesktopLauncher {
 
@@ -13,6 +13,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = DEFAULT_WIDTH;
 		config.height = DEFAULT_HEIGHT;
-		new LwjglApplication(new StarShooter(), config);
+		new LwjglApplication(new StarShooterGame(), config);
 	}
 }

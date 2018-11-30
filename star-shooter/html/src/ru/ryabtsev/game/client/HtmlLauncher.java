@@ -3,7 +3,7 @@ package ru.ryabtsev.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import ru.ryabtsev.game.StarShooter;
+import ru.ryabtsev.game.StarShooterGame;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -46,6 +46,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new StarShooter();
+                return new StarShooterGame();
         }
 }
