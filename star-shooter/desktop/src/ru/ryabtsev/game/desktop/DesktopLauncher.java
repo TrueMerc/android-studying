@@ -5,8 +5,14 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import ru.ryabtsev.game.StarShooter;
 
 public class DesktopLauncher {
+
+	private static final int DEFAULT_WIDTH = 640;
+	private static final int DEFAULT_HEIGHT = 480;
+
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = DEFAULT_WIDTH;
+		config.height = DEFAULT_HEIGHT;
 		new LwjglApplication(new StarShooter(), config);
 	}
 }

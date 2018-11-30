@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class StarShooter extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture background;
+	Texture spaceShip;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("space_background.png");
+		background = new Texture("space_background.png");
+		spaceShip = new Texture( "star_ship.png");
 	}
 
 	@Override
@@ -21,13 +23,15 @@ public class StarShooter extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
+		batch.draw(background, 0, 0);
+		batch.draw(spaceShip, 0, 0, spaceShip.getWidth() * 0.1f, spaceShip.getHeight() * 0.1f );
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		background.dispose();
+		spaceShip.dispose();
 	}
 }
