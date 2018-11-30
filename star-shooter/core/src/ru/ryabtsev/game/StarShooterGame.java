@@ -4,6 +4,9 @@ import com.badlogic.gdx.Game;
 
 import ru.ryabtsev.game.screen.MenuScreen;
 
+/**
+ * Game main class.
+ */
 public class StarShooterGame extends Game {
 
 	@Override
