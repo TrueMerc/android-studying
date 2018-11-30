@@ -1,6 +1,7 @@
 package ru.ryabtsev.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -64,6 +65,21 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean keyDown(int keycode) {
+        switch(keycode) {
+            case Input.Keys.DOWN:
+                destinationPosition.sub( 0, 10);
+                break;
+            case Input.Keys.LEFT:
+                destinationPosition.sub( 10, 0);
+                break;
+            case Input.Keys.RIGHT:
+                destinationPosition.add( 10, 0 );
+                break;
+            case Input.Keys.UP:
+                destinationPosition.add( 0, 10);
+                break;
+        }
+
         return super.keyDown(keycode);
     }
 
