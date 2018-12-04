@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class MenuScreen extends Base2DScreen {
 
-    private static final float HEIGHT_AXIS_SCALE = 50f;
+    private static final float HEIGHT_AXIS_SCALE = 100f;
     private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
     private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;;
     private static final float VELOCITY_SCALE = 0.01f * HEIGHT_AXIS_SCALE;
