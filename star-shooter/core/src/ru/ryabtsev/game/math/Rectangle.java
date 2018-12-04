@@ -66,11 +66,20 @@ public class Rectangle {
     }
 
     /**
+     * Sets left border abscissa.
+     * @param leftAbscissa - left border abscissa.
+     */
+    public void setLeft(float leftAbscissa) {
+        center.x = leftAbscissa + halfWidth;
+    }
+
+    /**
      * Returns top border ordinate.
      */
     public float getTop() {
         return center.y + halfHeight;
     }
+
 
     /**
      * Returns right border abscissa.
@@ -84,6 +93,13 @@ public class Rectangle {
      */
     public float getBottom() {
         return center.y - halfHeight;
+    }
+
+    /**
+     * Sets bottom border ordinate.
+     */
+    public void setBottom(float bottomOrdinate) {
+        center.y = bottomOrdinate + halfHeight;
     }
 
     /**
@@ -108,10 +124,20 @@ public class Rectangle {
     }
 
     /**
+     * Sets new rectangle size.
+     */
+    public void resize(float width, float height) {
+        this.halfWidth = width / 2;
+        this.halfHeight = height / 2;
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
         return "Rectangle: pos" + center + " size(" + getWidth() + ", " + getHeight() + ")";
     }
+
 }

@@ -11,7 +11,9 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class MenuScreen extends Base2DScreen {
 
-    private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f;
+    private static final float HEIGHT_AXIS_SCALE = 100f;
+    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
+    private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;;
     private static final float VELOCITY_SCALE = 0.5f;
 
     private Texture backgroundTexture;
@@ -25,21 +27,26 @@ public class MenuScreen extends Base2DScreen {
     private float spaceShipTextureBatchHeight;
     private float getSpaceShipTextureBatchWidth;
 
+    public MenuScreen() {
+        super(HEIGHT_AXIS_SCALE);
+    }
+
     @Override
     public void show() {
         super.show();
         backgroundTexture = new Texture("space_background.png");
         spaceShipTexture = new Texture( "star_ship.png");
 
-        spaceShipTextureBatchHeight = spaceShipTexture.getHeight() * SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR;
-        getSpaceShipTextureBatchWidth = spaceShipTexture.getWidth() * SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR;
+
+        spaceShipTextureBatchHeight = SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR;
+        getSpaceShipTextureBatchWidth = SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR;
 
         currentPosition = new Vector2( 0 , 0);
         destinationPosition = new Vector2( 0, 0);
         velocity = new Vector2( 0, 0);
         temporary = new Vector2( 0, 0);
 
-        Gdx.input.setInputProcessor(this);
+        resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
 
     @Override
@@ -48,7 +55,7 @@ public class MenuScreen extends Base2DScreen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        temporary.set(destinationPosition);
+       temporary.set(destinationPosition);
         if( temporary.sub(currentPosition).len() > VELOCITY_SCALE ) {
             currentPosition.add(velocity);
         }
@@ -57,8 +64,8 @@ public class MenuScreen extends Base2DScreen {
         }
 
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0);
-        batch.draw(spaceShipTexture, currentPosition.x, currentPosition.y, getSpaceShipTextureBatchWidth, spaceShipTextureBatchHeight );
+        batch.draw(backgroundTexture, -.5f * HEIGHT_AXIS_SCALE, -.5f * HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE);
+        batch.draw(spaceShipTexture, currentPosition.x, currentPosition.y, getSpaceShipTextureBatchWidth, spaceShipTextureBatchHeight);
         batch.end();
     }
 
@@ -71,22 +78,25 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        destinationPosition.set( currentPosition );
+        destinationPosition.set( currentPosition ); // Break current movement if it is present.
+        System.out.println("keyDown: currentPosition:" + currentPosition);
         switch(keycode) {
             case Input.Keys.DOWN:
-                destinationPosition.sub( 0, 10);
+                destinationPosition.sub( 0, KEYBOARD_MOVEMENT_STEP);
                 break;
             case Input.Keys.LEFT:
-                destinationPosition.sub( 10, 0);
+                destinationPosition.sub( KEYBOARD_MOVEMENT_STEP, 0);
                 break;
             case Input.Keys.RIGHT:
-                destinationPosition.add( 10, 0 );
+                destinationPosition.add( KEYBOARD_MOVEMENT_STEP, 0 );
                 break;
             case Input.Keys.UP:
-                destinationPosition.add( 0, 10);
+                destinationPosition.add( 0, KEYBOARD_MOVEMENT_STEP);
                 break;
         }
+        System.out.println("keyDown: destinationPosition:" + destinationPosition);
         velocity.set(destinationPosition.cpy().sub(currentPosition)).setLength(VELOCITY_SCALE);
+        System.out.println("velocity: " + velocity);
         return super.keyDown(keycode);
     }
 
@@ -97,12 +107,19 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        destinationPosition.set( screenX, Gdx.graphics.getHeight() - screenY);
-        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
-        System.out.println("Texture coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
 
-        velocity.set( destinationPosition.cpy().sub(currentPosition).setLength(VELOCITY_SCALE) );
-        return super.touchDown(screenX, screenY, pointer, button);
+        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
+        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
+
+        destinationPosition.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
+        velocity.set( destinationPosition.cpy().sub(currentPosition) ).setLength( VELOCITY_SCALE );
+
+
+        System.out.println("Current coordinates: x = " + currentPosition.x + ", y = " + currentPosition.y );
+        System.out.println("Destination coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
+        System.out.println("Velocity = " + velocity);
+
+        return false;
     }
 
 
