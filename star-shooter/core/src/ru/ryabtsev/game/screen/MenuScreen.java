@@ -82,6 +82,7 @@ public class MenuScreen extends Base2DScreen {
         if( exitButton.isInside(position) ) {
             System.out.println("Exit button clicked.");
             exitButton.setScale(1.25f);
+            Gdx.app.exit();
         }
         return false;
     }
