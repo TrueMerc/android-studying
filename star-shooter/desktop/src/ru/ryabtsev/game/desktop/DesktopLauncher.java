@@ -4,6 +4,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import ru.ryabtsev.game.StarShooterGame;
 
+/**
+ * Class which launches application desktop version.
+ */
 public class DesktopLauncher {
 
 	private static final int DEFAULT_WIDTH = 640;
