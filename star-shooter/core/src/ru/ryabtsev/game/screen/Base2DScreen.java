@@ -6,11 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 
 import ru.ryabtsev.game.math.Matrices;
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Background;
 
 /**
  * Base class for application screens.
@@ -32,6 +34,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     protected Texture backgroundTexture;
+    private Background background;
 
     protected Matrix4 worldToGl;
     protected Matrix3 screenToWorld;
@@ -68,6 +71,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor( this );
 
         backgroundTexture = new Texture("space_background.png");
+        background = new Background( new TextureRegion(backgroundTexture) );
         resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
 
@@ -80,7 +84,8 @@ public class Base2DScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(backgroundTexture, -.5f * HEIGHT_AXIS_SCALE, -.5f * HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE);
+        //batch.draw(backgroundTexture, -.5f * HEIGHT_AXIS_SCALE, -.5f * HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE);
+        background.draw(batch);
         batch.end();
     }
 
@@ -98,6 +103,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         Matrices.inplaceSetTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
         Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
+        background.resize(worldBounds);
     }
 
     @Override
