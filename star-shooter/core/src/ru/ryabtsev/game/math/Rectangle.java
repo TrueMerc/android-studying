@@ -131,7 +131,6 @@ public class Rectangle {
         this.halfHeight = height / 2;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -140,8 +139,12 @@ public class Rectangle {
         return "Rectangle: pos" + center + " size(" + getWidth() + ", " + getHeight() + ")";
     }
 
-
-    public boolean isInside( Vector2 position ) {
-        return (position.x >= getLeft() && position.x <= getRight() && position.y >= getBottom() && position.y <= getTop());
+    /**
+     * Determines if the point is inside rectangle or not.
+     * @param point - point coordinates.
+     * @return true if the point is inside rectangle or false if it isn't.
+     */
+    public boolean isInside( Vector2 point ) {
+        return (point.x >= getLeft() && point.x <= getRight() && point.y >= getBottom() && point.y <= getTop());
     }
 }

@@ -75,6 +75,23 @@ public class MenuScreen extends Base2DScreen {
 
 
     @Override
+    public boolean mouseMoved(Vector2 position) {
+        if(playButton.isInside(position)) {
+            playButton.setScale(1.25f);
+        }
+        else {
+            playButton.setScale(1f);
+        }
+        if(exitButton.isInside(position)) {
+            exitButton.setScale(1.25f);
+        }
+        else {
+            exitButton.setScale(1f);
+        }
+        return true;
+    }
+
+    @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
         if( playButton.isInside(position) ) {
             System.out.println("Play button clicked.");
@@ -95,6 +112,8 @@ public class MenuScreen extends Base2DScreen {
         exitButton.setScale(1f);
         return true;
     }
+
+
 
     @Override
     public void dispose() {

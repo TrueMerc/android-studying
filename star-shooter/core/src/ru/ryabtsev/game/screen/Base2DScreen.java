@@ -43,6 +43,7 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected float worldHeight;
 
     protected Vector2 touch;
+    protected Vector2 mousePosition;
 
     /**
      * Constructor.
@@ -55,6 +56,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         screenToWorld = new Matrix3();
         this.worldHeight = worldHeight;
         this.touch = new Vector2();
+        this.mousePosition = new Vector2();
     }
 
     /**
@@ -146,6 +148,9 @@ public class Base2DScreen implements Screen, InputProcessor {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
@@ -158,6 +163,17 @@ public class Base2DScreen implements Screen, InputProcessor {
     public boolean touchDown(final Vector2 position, int pointer, int button) {
         return false;
     }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        mousePosition.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
+        return mouseMoved(mousePosition);
+    }
+
+    public boolean mouseMoved(final Vector2 position) {
+        return false;
+    }
+
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -175,13 +191,7 @@ public class Base2DScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
     public boolean scrolled(int amount) {
         return false;
     }
-
 }

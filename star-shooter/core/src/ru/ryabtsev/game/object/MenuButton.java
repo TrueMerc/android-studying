@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
 
+/**
+ * Game menu buttons class.
+ */
 public class MenuButton extends Sprite {
 
     private static final float DEFAULT_HEIGHT = 0.3f;
