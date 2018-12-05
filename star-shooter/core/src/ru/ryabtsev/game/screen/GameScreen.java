@@ -6,10 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Main game screen.
+ * Game main screen class.
  */
 public class GameScreen extends Base2DScreen {
-
 
     private Texture spaceShipTexture;
 
