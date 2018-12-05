@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Matrices;
 import ru.ryabtsev.game.math.Rectangle;
@@ -41,6 +42,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected float worldHeight;
 
+    protected Vector2 touch;
 
     /**
      * Constructor.
@@ -52,6 +54,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         this.worldHeight = worldHeight;
+        this.touch = new Vector2();
     }
 
     /**
@@ -146,11 +149,24 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
+        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
+        touch.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
+        return touchDown( touch, pointer, button);
+    }
+
+
+    public boolean touchDown(final Vector2 position, int pointer, int button) {
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touch.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
+        return touchUp( touch, pointer, button);
+    }
+
+    public boolean touchUp(final Vector2 position, int pointer, int button) {
         return false;
     }
 

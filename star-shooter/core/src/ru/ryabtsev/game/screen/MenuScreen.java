@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.ryabtsev.game.object.MenuButton;
 import ru.ryabtsev.game.object.Star;
 
 /**
@@ -18,6 +19,8 @@ public class MenuScreen extends Base2DScreen {
 
     private TextureAtlas textureAtlas;
     private Star[] stars;
+    private MenuButton playButton;
+    private MenuButton exitButton;
 
     public MenuScreen() {
         super(HEIGHT_AXIS_SCALE);
@@ -26,6 +29,8 @@ public class MenuScreen extends Base2DScreen {
         for(int i = 0; i < stars.length; ++i) {
             stars[i] = new Star(textureAtlas);
         }
+        playButton = new MenuButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0) );
+        exitButton = new MenuButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
     }
 
     @Override
@@ -51,6 +56,8 @@ public class MenuScreen extends Base2DScreen {
         for(int i = 0; i < stars.length; ++i) {
             stars[i].draw(batch);
         }
+        playButton.draw(batch);
+        exitButton.draw(batch);
         batch.end();
     }
 
@@ -60,6 +67,8 @@ public class MenuScreen extends Base2DScreen {
         for(int i = 0; i < stars.length; ++i) {
             stars[i].resize(worldBounds);
         }
+        playButton.resize(worldBounds);
+        exitButton.resize(worldBounds);
     }
 
     @Override

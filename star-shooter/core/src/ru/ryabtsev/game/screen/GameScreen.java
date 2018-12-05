@@ -91,20 +91,31 @@ public class GameScreen extends Base2DScreen {
         return super.keyUp(keycode);
     }
 
+//    @Override
+//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//
+//        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
+//        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
+//
+//
+//        velocity.set( destinationPosition.cpy().sub(currentPosition) ).setLength( VELOCITY_SCALE );
+//
+//
+//        System.out.println("Current coordinates: x = " + currentPosition.x + ", y = " + currentPosition.y );
+//        System.out.println("Destination coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
+//        System.out.println("Velocity = " + velocity);
+//
+//        return false;
+//    }
+
+
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
-        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
-
-        destinationPosition.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
+    public boolean touchDown(Vector2 position, int pointer, int button) {
+        destinationPosition.set( position );
         velocity.set( destinationPosition.cpy().sub(currentPosition) ).setLength( VELOCITY_SCALE );
-
-
         System.out.println("Current coordinates: x = " + currentPosition.x + ", y = " + currentPosition.y );
         System.out.println("Destination coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
         System.out.println("Velocity = " + velocity);
-
-        return false;
+        return super.touchDown(position, pointer, button);
     }
 }
