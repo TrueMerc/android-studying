@@ -3,6 +3,8 @@ package ru.ryabtsev.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -19,11 +21,17 @@ public class Base2DScreen implements Screen, InputProcessor {
     private static float GL_DEFAULT_HEIGHT = 2f;
     private static float WORLD_DEFAULT_HEIGHT = 1f;
 
+    protected static final float HEIGHT_AXIS_SCALE = 1f;
+    protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
+    protected static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;;
+    protected static final float VELOCITY_SCALE = 0.01f * HEIGHT_AXIS_SCALE;
+
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     private Rectangle worldBounds;  // painting area bounds in game world coordinates
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
 
     protected SpriteBatch batch;
+    protected Texture backgroundTexture;
 
     protected Matrix4 worldToGl;
     protected Matrix3 screenToWorld;
@@ -50,16 +58,30 @@ public class Base2DScreen implements Screen, InputProcessor {
         this( WORLD_DEFAULT_HEIGHT );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void show() {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().idt();
         Gdx.input.setInputProcessor( this );
+
+        backgroundTexture = new Texture("space_background.png");
+        resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
 
+    /**
+     * {@inheritDoc}
+     * @param delta
+     */
     @Override
     public void render(float delta) {
-
+        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(backgroundTexture, -.5f * HEIGHT_AXIS_SCALE, -.5f * HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE, HEIGHT_AXIS_SCALE);
+        batch.end();
     }
 
     @Override
@@ -95,6 +117,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
+        backgroundTexture.dispose();
         batch.dispose();
     }
 
