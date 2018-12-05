@@ -116,6 +116,6 @@ public class GameScreen extends Base2DScreen {
         System.out.println("Current coordinates: x = " + currentPosition.x + ", y = " + currentPosition.y );
         System.out.println("Destination coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
         System.out.println("Velocity = " + velocity);
-        return super.touchDown(position, pointer, button);
+        return true;
     }
 }

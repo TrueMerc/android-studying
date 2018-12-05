@@ -15,7 +15,7 @@ import ru.ryabtsev.game.object.Star;
  */
 public class MenuScreen extends Base2DScreen {
 
-    private static final int STARS_COUNT = 100;
+    private static final int STARS_COUNT = 50;
 
     private TextureAtlas textureAtlas;
     private Star[] stars;
@@ -69,6 +69,28 @@ public class MenuScreen extends Base2DScreen {
         }
         playButton.resize(worldBounds);
         exitButton.resize(worldBounds);
+    }
+
+
+    @Override
+    public boolean touchDown(Vector2 position, int pointer, int button) {
+        if( playButton.isInside(position) ) {
+            System.out.println("Play button clicked.");
+            playButton.setScale(1.25f);
+            return true;
+        }
+        if( exitButton.isInside(position) ) {
+            System.out.println("Exit button clicked.");
+            exitButton.setScale(1.25f);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(Vector2 position, int pointer, int button) {
+        playButton.setScale(1f);
+        exitButton.setScale(1f);
+        return true;
     }
 
     @Override

@@ -140,4 +140,8 @@ public class Rectangle {
         return "Rectangle: pos" + center + " size(" + getWidth() + ", " + getHeight() + ")";
     }
 
+
+    public boolean isInside( Vector2 position ) {
+        return (position.x >= getLeft() && position.x <= getRight() && position.y >= getBottom() && position.y <= getTop());
+    }
 }
