@@ -1,5 +1,6 @@
 package ru.ryabtsev.game.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.math.Matrices;
 import ru.ryabtsev.game.math.Rectangle;
 import ru.ryabtsev.game.object.Background;
@@ -26,7 +28,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected static final float HEIGHT_AXIS_SCALE = 1f;
     protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
-    protected static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;;
+    protected static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;
     protected static final float VELOCITY_SCALE = 0.01f * HEIGHT_AXIS_SCALE;
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
@@ -45,10 +47,13 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected Vector2 touch;
     protected Vector2 mousePosition;
 
+    protected StarShooterGame game;
+
     /**
      * Constructor.
      */
-    Base2DScreen(float worldHeight) {
+    Base2DScreen(StarShooterGame game, float worldHeight) {
+        this.game  = game;
         screenBounds = new Rectangle();
         worldBounds = new Rectangle();
         glBounds = new Rectangle(0, 0, GL_DEFAULT_WIDTH, GL_DEFAULT_HEIGHT);
@@ -59,12 +64,6 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.mousePosition = new Vector2();
     }
 
-    /**
-     * Constructor.
-     */
-    Base2DScreen() {
-        this( WORLD_DEFAULT_HEIGHT );
-    }
 
     /**
      * {@inheritDoc}

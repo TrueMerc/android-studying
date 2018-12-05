@@ -1,5 +1,6 @@
 package ru.ryabtsev.game.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.MenuButton;
 import ru.ryabtsev.game.object.Star;
 
@@ -22,8 +24,8 @@ public class MenuScreen extends Base2DScreen {
     private MenuButton playButton;
     private MenuButton exitButton;
 
-    public MenuScreen() {
-        super(HEIGHT_AXIS_SCALE);
+    public MenuScreen(StarShooterGame game) {
+        super(game, HEIGHT_AXIS_SCALE);
         textureAtlas = new TextureAtlas("menuAtlas.tpack");
         stars = new Star[STARS_COUNT];
         for(int i = 0; i < stars.length; ++i) {
@@ -95,7 +97,7 @@ public class MenuScreen extends Base2DScreen {
     public boolean touchDown(Vector2 position, int pointer, int button) {
         if( playButton.isInside(position) ) {
             System.out.println("Play button clicked.");
-            playButton.setScale(1.25f);
+            game.setScreen(StarShooterGame.ScreenType.GAME);
             return true;
         }
         if( exitButton.isInside(position) ) {
@@ -112,8 +114,6 @@ public class MenuScreen extends Base2DScreen {
         exitButton.setScale(1f);
         return true;
     }
-
-
 
     @Override
     public void dispose() {

@@ -1,9 +1,12 @@
 package ru.ryabtsev.game.screen;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+
+import ru.ryabtsev.game.StarShooterGame;
 
 /**
  * Game main screen class.
@@ -20,8 +23,8 @@ public class GameScreen extends Base2DScreen {
     private float spaceShipTextureBatchHeight;
     private float getSpaceShipTextureBatchWidth;
 
-    public GameScreen() {
-        super(HEIGHT_AXIS_SCALE);
+    public GameScreen(StarShooterGame game) {
+        super(game, HEIGHT_AXIS_SCALE);
     }
 
     @Override
