@@ -19,6 +19,10 @@ public class Sprite extends Rectangle {
     protected TextureRegion regions[];
     protected int currentRegionId;
 
+    /**
+     * Constructor.
+     * @param region - sprite object texture.
+     */
     public Sprite(TextureRegion region) {
         angle = 0f;
         scale = 1f;

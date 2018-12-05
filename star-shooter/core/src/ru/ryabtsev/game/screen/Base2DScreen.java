@@ -29,7 +29,7 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected static final float VELOCITY_SCALE = 0.01f * HEIGHT_AXIS_SCALE;
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
-    private Rectangle worldBounds;  // painting area bounds in game world coordinates
+    protected Rectangle worldBounds;  // painting area bounds in game world coordinates
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
 
     protected SpriteBatch batch;
