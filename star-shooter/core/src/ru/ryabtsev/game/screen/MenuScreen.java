@@ -69,6 +69,8 @@ public class MenuScreen extends Base2DScreen {
         }
         playButton.resize(worldBounds);
         exitButton.resize(worldBounds);
+        playButton.setPosition(new Vector2( -0.3f, 0));
+        exitButton.setPosition( new Vector2( 0.3f, 0));
     }
 
 

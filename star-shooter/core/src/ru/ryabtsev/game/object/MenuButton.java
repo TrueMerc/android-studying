@@ -8,7 +8,6 @@ import ru.ryabtsev.game.math.Rectangle;
 
 public class MenuButton extends Sprite {
 
-
     private static final float DEFAULT_HEIGHT = 0.3f;
 
     /**
@@ -46,5 +45,7 @@ public class MenuButton extends Sprite {
         super.update(delta);
     }
 
-
+    public void setPosition(final Vector2 position) {
+        center.set(position);
+    }
 }
