@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -16,6 +17,7 @@ import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.math.Matrices;
 import ru.ryabtsev.game.math.Rectangle;
 import ru.ryabtsev.game.object.Background;
+import ru.ryabtsev.game.object.Star;
 
 /**
  * Base class for application screens.
@@ -49,6 +51,11 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected StarShooterGame game;
 
+    private TextureAtlas textureAtlas;
+
+    private static final int STARS_COUNT = 50;
+    private Star[] stars;
+
     /**
      * Constructor.
      */
@@ -62,6 +69,12 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.worldHeight = worldHeight;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
+        textureAtlas = new TextureAtlas("menuAtlas.tpack");
+
+        stars = new Star[STARS_COUNT];
+        for(int i = 0; i < stars.length; ++i) {
+            stars[i] = new Star(textureAtlas);
+        }
     }
 
 
@@ -92,6 +105,21 @@ public class Base2DScreen implements Screen, InputProcessor {
         batch.end();
     }
 
+    public void update(float delta) {
+        for(int i = 0; i < stars.length; ++i) {
+            stars[i].update(delta);
+        }
+    }
+
+    public void draw() {
+        batch.begin();
+        background.draw(batch);
+        for(int i = 0; i < stars.length; ++i) {
+            stars[i].draw(batch);
+        }
+        batch.end();
+    }
+
     @Override
     public void resize(int width, int height) {
         System.out.println("resize(): width = " + width + ", height = " + height);
@@ -107,6 +135,10 @@ public class Base2DScreen implements Screen, InputProcessor {
         batch.setProjectionMatrix(worldToGl);
         Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
         background.resize(worldBounds);
+
+        for(int i = 0; i < stars.length; ++i) {
+            stars[i].resize(worldBounds);
+        }
     }
 
     @Override

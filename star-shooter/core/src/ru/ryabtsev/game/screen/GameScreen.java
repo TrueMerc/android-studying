@@ -45,7 +45,13 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        update( delta );
+        draw();
+    }
 
+    @Override
+    public void update(float delta) {
+        super.update( delta );
         temporary.set(destinationPosition);
         if( temporary.sub(currentPosition).len() > VELOCITY_SCALE ) {
             currentPosition.add(velocity);
@@ -53,7 +59,12 @@ public class GameScreen extends Base2DScreen {
         else {
             currentPosition.set(destinationPosition);
         }
+    }
 
+
+    @Override
+    public void draw() {
+        super.draw();
         batch.begin();
         batch.draw(spaceShipTexture, currentPosition.x, currentPosition.y, getSpaceShipTextureBatchWidth, spaceShipTextureBatchHeight);
         batch.end();
@@ -82,6 +93,9 @@ public class GameScreen extends Base2DScreen {
             case Input.Keys.UP:
                 destinationPosition.add( 0, KEYBOARD_MOVEMENT_STEP);
                 break;
+            case Input.Keys.M:
+                game.setScreen( StarShooterGame.ScreenType.MENU );
+                return true;
         }
         System.out.println("keyDown: destinationPosition:" + destinationPosition);
         velocity.set(destinationPosition.cpy().sub(currentPosition)).setLength(VELOCITY_SCALE);
@@ -93,24 +107,6 @@ public class GameScreen extends Base2DScreen {
     public boolean keyUp(int keycode) {
         return super.keyUp(keycode);
     }
-
-//    @Override
-//    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-//
-//        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
-//        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
-//
-//
-//        velocity.set( destinationPosition.cpy().sub(currentPosition) ).setLength( VELOCITY_SCALE );
-//
-//
-//        System.out.println("Current coordinates: x = " + currentPosition.x + ", y = " + currentPosition.y );
-//        System.out.println("Destination coordinates: x = " + destinationPosition.x + ", y = " + destinationPosition.y );
-//        System.out.println("Velocity = " + velocity);
-//
-//        return false;
-//    }
-
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
