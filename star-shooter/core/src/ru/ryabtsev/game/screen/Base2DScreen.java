@@ -30,8 +30,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected static final float HEIGHT_AXIS_SCALE = 1f;
     protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
-    protected static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f * HEIGHT_AXIS_SCALE;
-    protected static final float VELOCITY_SCALE = 0.01f * HEIGHT_AXIS_SCALE;
+
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     protected Rectangle worldBounds;  // painting area bounds in game world coordinates
