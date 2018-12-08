@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.swing.plaf.synth.Region;
-
 import ru.ryabtsev.game.math.Rectangle;
 
 /**
@@ -45,7 +43,6 @@ public class Sprite extends Rectangle {
                 angle
         );
     }
-
 
     /**
      * Changes sprite size.

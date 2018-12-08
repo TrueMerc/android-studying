@@ -5,15 +5,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
+import ru.ryabtsev.game.object.ExitButton;
 import ru.ryabtsev.game.object.MenuButton;
-import ru.ryabtsev.game.object.Star;
+import ru.ryabtsev.game.object.PlayButton;
 
 /**
  * Game menu class.
  */
 public class MenuScreen extends Base2DScreen {
-
-
 
     private TextureAtlas textureAtlas;
 
@@ -24,8 +23,8 @@ public class MenuScreen extends Base2DScreen {
         super(game, HEIGHT_AXIS_SCALE);
         textureAtlas = new TextureAtlas("menuAtlas.tpack");
 
-        playButton = new MenuButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0) );
-        exitButton = new MenuButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
+        playButton = new PlayButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0), game );
+        exitButton = new ExitButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
     }
 
     @Override
@@ -40,6 +39,7 @@ public class MenuScreen extends Base2DScreen {
         draw();
     }
 
+    @Override
     public void draw() {
         super.draw();
         batch.begin();
@@ -59,37 +59,20 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean mouseMoved(Vector2 position) {
-        if(playButton.isInside(position)) {
-            playButton.setScale(1.25f);
-        }
-        else {
-            playButton.setScale(1f);
-        }
-        if(exitButton.isInside(position)) {
-            exitButton.setScale(1.25f);
-        }
-        else {
-            exitButton.setScale(1f);
-        }
+        playButton.onSelect(position);
+        exitButton.onSelect(position);
         return true;
     }
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
-        if( playButton.isInside(position) ) {
-            game.setScreen(StarShooterGame.ScreenType.GAME);
-            return true;
-        }
-        if( exitButton.isInside(position) ) {
-            Gdx.app.exit();
-        }
+        playButton.onTouchDown(position);
+        exitButton.onTouchDown(position);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 position, int pointer, int button) {
-        playButton.setScale(1f);
-        exitButton.setScale(1f);
         return true;
     }
 
