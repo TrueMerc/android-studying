@@ -19,7 +19,7 @@ public class GameScreen extends Base2DScreen {
     public GameScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
         spaceShipTexture = new Texture( "star_ship.png");
-        spaceShip = new SpaceShip( new TextureRegion(spaceShipTexture) );
+        spaceShip = new SpaceShip( new TextureRegion(spaceShipTexture), worldBounds );
     }
 
     @Override
@@ -65,7 +65,6 @@ public class GameScreen extends Base2DScreen {
     @Override
     public boolean keyDown(int keycode) {
         spaceShip.setDestination( spaceShip.getCenter() ); // Break current movement if it is present.
-        //System.out.println("keyDown: currentPosition:" + currentPosition);
         switch(keycode) {
             case Input.Keys.DOWN:
                 spaceShip.setDestination( spaceShip.getCenter().sub( 0, KEYBOARD_MOVEMENT_STEP) );

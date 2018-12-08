@@ -13,6 +13,7 @@ public class SpaceShip extends Sprite {
     private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f;
     private static final float VELOCITY_SCALE = 0.01f;
 
+    private Rectangle worldBounds;
     private Vector2 velocity;
     private Vector2 destination;
     private Vector2 temporary;  // Temporary vector for usage in update() method.
@@ -21,9 +22,10 @@ public class SpaceShip extends Sprite {
      * Constructor.
      * @param region - sprite object texture.
      */
-    public SpaceShip(TextureRegion region) {
+    public SpaceShip(TextureRegion region, Rectangle worldBounds) {
         super(region);
         center.set( new Vector2(0f, 0f) );
+        this.worldBounds = worldBounds;
 
         destination = new Vector2( 0, 0);
         velocity = new Vector2( 0, 0);
@@ -48,10 +50,24 @@ public class SpaceShip extends Sprite {
     }
 
     public void setDestination(final Vector2 position) {
-        destination.set( position );
+
+        destination.set( handleBounds(position) );
         velocity.set( destination.cpy().sub(center) ).setLength( VELOCITY_SCALE );
+
         System.out.println("Current coordinates: " + center );
         System.out.println("Destination coordinates: " + destination );
         System.out.println("Velocity = " + velocity);
+    }
+
+    private Vector2 handleBounds(final Vector2 position) {
+        float x = position.x;
+        float y = position.y;
+        float halfWidth = getWidth() / 2f;
+        float halfHeight = getHeight() / 2f;
+        if( x - halfWidth < worldBounds.getLeft()) { x = worldBounds.getLeft() + halfWidth; }
+        if( x + halfWidth > worldBounds.getRight()) { x = worldBounds.getRight() - halfWidth; }
+        if( y - halfHeight < worldBounds.getBottom()) { y = worldBounds.getBottom() + halfHeight; }
+        if( y + halfHeight > worldBounds.getTop()) { y = worldBounds.getTop() - halfHeight; }
+        return new Vector2(x, y);
     }
 }
