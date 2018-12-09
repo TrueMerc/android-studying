@@ -78,18 +78,22 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        spaceShip.setDestination( spaceShip.getCenter() ); // Break current movement if it is present.
+
         switch(keycode) {
             case Input.Keys.DOWN:
+//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().sub( 0, KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.LEFT:
+//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().sub( KEYBOARD_MOVEMENT_STEP, 0) );
                 break;
             case Input.Keys.RIGHT:
+//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().add( KEYBOARD_MOVEMENT_STEP, 0 ) );
                 break;
             case Input.Keys.UP:
+//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().add( 0,  KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.M:

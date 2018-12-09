@@ -59,7 +59,7 @@ public class SpaceShip extends Sprite {
     }
 
     public void setDestination(final Vector2 position) {
-
+        stop();
         destination.set( handleBounds(position) );
         velocity.set( destination.cpy().sub(center) ).setLength( VELOCITY_SCALE );
 
@@ -88,4 +88,12 @@ public class SpaceShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("bulletMainShip"), center, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
     }
+
+    /**
+     * Stops space ship.
+     */
+    public void stop() {
+        destination.set(center);
+    }
+
 }
