@@ -1,5 +1,7 @@
 package ru.ryabtsev.game.object;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +23,8 @@ public class SpaceShip extends Sprite {
 
     private BulletPool bulletPool;
     private TextureAtlas atlas;
+    private Sound fireSound;
+
 
     /**
      * Constructor.
@@ -37,8 +41,10 @@ public class SpaceShip extends Sprite {
         velocity = new Vector2( 0, 0);
         temporary = new Vector2( 0, 0);
 
-        atlas = new TextureAtlas("mainAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         this.bulletPool = bulletPool;
+
+        fireSound = Gdx.audio.newSound( Gdx.files.internal("sounds/laser-shoot.wav"));
     }
 
     @Override
@@ -91,6 +97,7 @@ public class SpaceShip extends Sprite {
     public void fire() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("bulletMainShip"), center, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
+        fireSound.play(0.75f);
     }
 
     /**

@@ -20,7 +20,7 @@ public class GameScreen extends Base2DScreen {
 
     public GameScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
-        spaceShipTexture = new Texture( "star_ship.png");
+        spaceShipTexture = new Texture( "textures/star_ship.png");
         bulletPool = new BulletPool();
         spaceShip = new SpaceShip( new TextureRegion(spaceShipTexture), bulletPool, worldBounds );
     }
@@ -78,22 +78,17 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-
         switch(keycode) {
             case Input.Keys.DOWN:
-//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().sub( 0, KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.LEFT:
-//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().sub( KEYBOARD_MOVEMENT_STEP, 0) );
                 break;
             case Input.Keys.RIGHT:
-//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().add( KEYBOARD_MOVEMENT_STEP, 0 ) );
                 break;
             case Input.Keys.UP:
-//                spaceShip.stop();
                 spaceShip.setDestination( spaceShip.getCenter().add( 0,  KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.M:
@@ -103,17 +98,13 @@ public class GameScreen extends Base2DScreen {
                 spaceShip.fire();
                 return true;
         }
-        //System.out.println("keyDown: destinationPosition:" + destinationPosition);
-        //velocity.set(destinationPosition.cpy().sub(currentPosition)).setLength(VELOCITY_SCALE);
-        //System.out.println("velocity: " + velocity);
-        return super.keyDown(keycode);
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         return super.keyUp(keycode);
     }
-
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {

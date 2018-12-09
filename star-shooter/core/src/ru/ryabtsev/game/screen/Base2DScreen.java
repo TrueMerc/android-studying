@@ -26,7 +26,6 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     private static float GL_DEFAULT_WIDTH = 2f;
     private static float GL_DEFAULT_HEIGHT = 2f;
-    private static float WORLD_DEFAULT_HEIGHT = 1f;
 
     protected static final float HEIGHT_AXIS_SCALE = 1f;
     protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
@@ -68,7 +67,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.worldHeight = worldHeight;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
-        textureAtlas = new TextureAtlas("menuAtlas.tpack");
+        textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
 
         stars = new Star[STARS_COUNT];
         for(int i = 0; i < stars.length; ++i) {
@@ -86,7 +85,7 @@ public class Base2DScreen implements Screen, InputProcessor {
         batch.getProjectionMatrix().idt();
         Gdx.input.setInputProcessor( this );
 
-        backgroundTexture = new Texture("space_background.png");
+        backgroundTexture = new Texture("textures/space_background.png");
         background = new Background( new TextureRegion(backgroundTexture) );
         resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
