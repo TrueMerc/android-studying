@@ -140,6 +140,22 @@ public class Rectangle {
     }
 
     /**
+     * Makes rectangle clone().
+     */
+    @Override
+    public Rectangle clone() {
+        return new Rectangle(center, getWidth(), getHeight() );
+    }
+
+    /**
+     * Moves rectangle to vector.
+     */
+    public Rectangle move( Vector2 vector) {
+        center.set(vector);
+        return this;
+    }
+
+    /**
      * Determines if the point is inside rectangle or not.
      * @param point - point coordinates.
      * @return true if the point is inside rectangle or false if it isn't.

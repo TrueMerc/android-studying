@@ -69,22 +69,26 @@ public class SpaceShip extends Sprite {
     }
 
     private Vector2 handleBounds(final Vector2 position) {
-        float x = position.x;
-        float y = position.y;
-        float halfWidth = getWidth() / 2f;
-        float halfHeight = getHeight() / 2f;
-        if( x - halfWidth < worldBounds.getLeft()) { x = worldBounds.getLeft() + halfWidth; }
-        if( x + halfWidth > worldBounds.getRight()) { x = worldBounds.getRight() - halfWidth; }
-        if( y - halfHeight < worldBounds.getBottom()) { y = worldBounds.getBottom() + halfHeight; }
-        if( y + halfHeight > worldBounds.getTop()) { y = worldBounds.getTop() - halfHeight; }
-        return new Vector2(x, y);
+        if(worldBounds.isInside( this.clone().move(position) )) {
+            return position;
+        }
+        else {
+            float x = position.x;
+            float y = position.y;
+            float halfWidth = getWidth() / 2f;
+            float halfHeight = getHeight() / 2f;
+            if( x - halfWidth < worldBounds.getLeft()) { x = worldBounds.getLeft() + halfWidth; }
+            if( x + halfWidth > worldBounds.getRight()) { x = worldBounds.getRight() - halfWidth; }
+            if( y - halfHeight < worldBounds.getBottom()) { y = worldBounds.getBottom() + halfHeight; }
+            if( y + halfHeight > worldBounds.getTop()) { y = worldBounds.getTop() - halfHeight; }
+            return new Vector2(x, y);
+        }
     }
 
     /**
      * Starts fire.
      */
     public void fire() {
-        System.out.println("Fire command!");
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("bulletMainShip"), center, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
     }
