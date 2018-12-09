@@ -74,6 +74,11 @@ public class SpaceShip extends Sprite {
         System.out.println("Velocity = " + velocity);
     }
 
+    public void moveTo( final Vector2 position ) {
+        stop();
+        center.set( position );
+    }
+
     private Vector2 handleBounds(final Vector2 position) {
         if(worldBounds.isInside( this.clone().move(position) )) {
             return position;
@@ -105,6 +110,7 @@ public class SpaceShip extends Sprite {
      */
     public void stop() {
         destination.set(center);
+        velocity.set( 0f, 0f);
     }
 
 }

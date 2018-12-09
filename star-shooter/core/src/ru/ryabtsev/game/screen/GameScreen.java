@@ -111,4 +111,13 @@ public class GameScreen extends Base2DScreen {
         spaceShip.setDestination(position);
         return true;
     }
+
+    @Override
+    public boolean touchDragged(Vector2 position, int pointer) {
+        if( spaceShip.isInside( position )) {
+            spaceShip.moveTo(position);
+            return true;
+        }
+        return false;
+    }
 }
