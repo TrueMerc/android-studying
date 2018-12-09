@@ -1,5 +1,6 @@
 package ru.ryabtsev.game.object;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,11 +19,16 @@ public class SpaceShip extends Sprite {
     private Vector2 destination;
     private Vector2 temporary;  // Temporary vector for usage in update() method.
 
+    private BulletPool bulletPool;
+    private TextureAtlas atlas;
+
     /**
      * Constructor.
-     * @param region - sprite object texture.
+     * @param region - space ship elements object texture atlas.
+     * @param bulletPool - pool of bullet objects associated with spaceship.
+     * @param worldBounds - bound of the game world.
      */
-    public SpaceShip(TextureRegion region, Rectangle worldBounds) {
+    public SpaceShip(TextureRegion region, BulletPool bulletPool, Rectangle worldBounds) {
         super(region);
         center.set( new Vector2(0f, 0f) );
         this.worldBounds = worldBounds;
@@ -30,6 +36,9 @@ public class SpaceShip extends Sprite {
         destination = new Vector2( 0, 0);
         velocity = new Vector2( 0, 0);
         temporary = new Vector2( 0, 0);
+
+        atlas = new TextureAtlas("mainAtlas.tpack");
+        this.bulletPool = bulletPool;
     }
 
     @Override
@@ -69,5 +78,14 @@ public class SpaceShip extends Sprite {
         if( y - halfHeight < worldBounds.getBottom()) { y = worldBounds.getBottom() + halfHeight; }
         if( y + halfHeight > worldBounds.getTop()) { y = worldBounds.getTop() - halfHeight; }
         return new Vector2(x, y);
+    }
+
+    /**
+     * Starts fire.
+     */
+    public void fire() {
+        System.out.println("Fire command!");
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, atlas.findRegion("bulletMainShip"), center, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
     }
 }

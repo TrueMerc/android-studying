@@ -144,7 +144,36 @@ public class Rectangle {
      * @param point - point coordinates.
      * @return true if the point is inside rectangle or false if it isn't.
      */
-    public boolean isInside( Vector2 point ) {
+    public boolean isInside(Vector2 point) {
         return (point.x >= getLeft() && point.x <= getRight() && point.y >= getBottom() && point.y <= getTop());
+    }
+
+    /**
+     * Determenes if the rectangle is inside current rectangle or not.
+     * @param rectangle - given rectangle.
+     * @return true if the rectangle is inside current rectangle or false if it isn't.
+     */
+    public boolean isInside(Rectangle rectangle) {
+        return (this.getLeft() <= rectangle.getLeft()) &&
+               (this.getRight() >= rectangle.getRight()) &&
+               (this.getTop() >= rectangle.getTop()) &&
+               (this.getBottom() <= rectangle.getBottom());
+    }
+
+    /**
+     * Determines if the rectangle intersects current rectangle (both rectangles have common points).
+     * @param rectangle - given rectangle.
+     */
+    public boolean isIntercect(Rectangle rectangle) {
+        return (this.getLeft() > rectangle.getRight() || this.getRight() < rectangle.getLeft()) ||
+               (this.getTop() < rectangle.getBottom() || this.getBottom() > rectangle.getTop()) ? false : true;
+    }
+
+    /**
+     * Determines if the rectangle is outside current rectangle (rectangles haven't common points).
+     * @param rectangle - given rectangle.
+     */
+    public boolean isOutside(Rectangle rectangle) {
+        return !(isInside(rectangle) || isIntercect(rectangle));
     }
 }

@@ -17,15 +17,23 @@ public class Sprite extends Rectangle {
     protected TextureRegion regions[];
     protected int currentRegionId;
 
+
+    /**
+     * Default constructor.
+     */
+    public Sprite() {
+        angle = 0f;
+        scale = 1f;
+        regions = new TextureRegion[1];
+        currentRegionId = 0;
+    }
+
     /**
      * Constructor.
      * @param region - sprite object texture.
      */
     public Sprite(TextureRegion region) {
-        angle = 0f;
-        scale = 1f;
-        regions = new TextureRegion[1];
-        currentRegionId = 0;
+        this();
         regions[0] = region;
     }
 
