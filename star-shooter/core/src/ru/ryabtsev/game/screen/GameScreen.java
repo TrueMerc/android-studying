@@ -28,7 +28,6 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void show() {
         super.show();
-
     }
 
     @Override
@@ -67,6 +66,7 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void dispose() {
         spaceShipTexture.dispose();
+        spaceShip.dispose();
         super.dispose();
     }
 

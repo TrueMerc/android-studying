@@ -113,4 +113,8 @@ public class SpaceShip extends Sprite {
         velocity.set( 0f, 0f);
     }
 
+
+    public void dispose() {
+        fireSound.dispose();
+    }
 }
