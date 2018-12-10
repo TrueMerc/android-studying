@@ -11,7 +11,7 @@ import ru.ryabtsev.game.math.Rectangle;
  */
 abstract public class MenuButton extends Sprite {
 
-    private static final float DEFAULT_HEIGHT = 0.3f;
+    private static final float DEFAULT_HEIGHT = 0.15f;
 
     private static final float SCALE_WHEN_SELECTED = 1.25f;
 
