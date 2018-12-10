@@ -1,36 +1,30 @@
 package ru.ryabtsev.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.ryabtsev.game.StarShooterGame;
+import ru.ryabtsev.game.object.ExitButton;
 import ru.ryabtsev.game.object.MenuButton;
-import ru.ryabtsev.game.object.Star;
+import ru.ryabtsev.game.object.PlayButton;
 
 /**
  * Game menu class.
  */
 public class MenuScreen extends Base2DScreen {
 
-    private static final int STARS_COUNT = 50;
-
     private TextureAtlas textureAtlas;
-    private Star[] stars;
+
     private MenuButton playButton;
     private MenuButton exitButton;
 
-    public MenuScreen() {
-        super(HEIGHT_AXIS_SCALE);
-        textureAtlas = new TextureAtlas("menuAtlas.tpack");
-        stars = new Star[STARS_COUNT];
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i] = new Star(textureAtlas);
-        }
-        playButton = new MenuButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0) );
-        exitButton = new MenuButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
+    public MenuScreen(StarShooterGame game) {
+        super(game, HEIGHT_AXIS_SCALE);
+        textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
+
+        playButton = new PlayButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0), game );
+        exitButton = new ExitButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
     }
 
     @Override
@@ -45,17 +39,10 @@ public class MenuScreen extends Base2DScreen {
         draw();
     }
 
-    public void update(float delta) {
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i].update(delta);
-        }
-    }
-
+    @Override
     public void draw() {
+        super.draw();
         batch.begin();
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i].draw(batch);
-        }
         playButton.draw(batch);
         exitButton.draw(batch);
         batch.end();
@@ -64,35 +51,28 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i].resize(worldBounds);
-        }
         playButton.resize(worldBounds);
         exitButton.resize(worldBounds);
         playButton.setPosition(new Vector2( -0.3f, 0));
         exitButton.setPosition( new Vector2( 0.3f, 0));
     }
 
+    @Override
+    public boolean mouseMoved(Vector2 position) {
+        playButton.onSelect(position);
+        exitButton.onSelect(position);
+        return true;
+    }
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
-        if( playButton.isInside(position) ) {
-            System.out.println("Play button clicked.");
-            playButton.setScale(1.25f);
-            return true;
-        }
-        if( exitButton.isInside(position) ) {
-            System.out.println("Exit button clicked.");
-            exitButton.setScale(1.25f);
-            Gdx.app.exit();
-        }
+        playButton.onTouchDown(position);
+        exitButton.onTouchDown(position);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 position, int pointer, int button) {
-        playButton.setScale(1f);
-        exitButton.setScale(1f);
         return true;
     }
 

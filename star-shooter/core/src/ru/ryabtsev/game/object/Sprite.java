@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import javax.swing.plaf.synth.Region;
-
 import ru.ryabtsev.game.math.Rectangle;
 
 /**
@@ -19,15 +17,23 @@ public class Sprite extends Rectangle {
     protected TextureRegion regions[];
     protected int currentRegionId;
 
+
+    /**
+     * Default constructor.
+     */
+    public Sprite() {
+        angle = 0f;
+        scale = 1f;
+        regions = new TextureRegion[1];
+        currentRegionId = 0;
+    }
+
     /**
      * Constructor.
      * @param region - sprite object texture.
      */
     public Sprite(TextureRegion region) {
-        angle = 0f;
-        scale = 1f;
-        regions = new TextureRegion[1];
-        currentRegionId = 0;
+        this();
         regions[0] = region;
     }
 
@@ -45,7 +51,6 @@ public class Sprite extends Rectangle {
                 angle
         );
     }
-
 
     /**
      * Changes sprite size.
