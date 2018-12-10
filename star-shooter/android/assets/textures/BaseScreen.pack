@@ -1,0 +1,26 @@
+
+BaseScreen.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Space
+  rotate: false
+  xy: 1, 21
+  size: 2048, 1024
+  orig: 2048, 1024
+  offset: 0, 0
+  index: -1
+Star1
+  rotate: false
+  xy: 1, 1
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+Star
+  rotate: false
+  xy: 2051, 1035
+  size: 11, 10
+  orig: 11, 10
+  offset: 0, 0
+  index: -1
