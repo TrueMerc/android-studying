@@ -13,6 +13,9 @@ import ru.ryabtsev.game.object.SpaceShip;
  * Game main screen class.
  */
 public class GameScreen extends Base2DScreen {
+
+    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
+
     private Texture spaceShipTexture;
 
     private BulletPool bulletPool;

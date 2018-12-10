@@ -5,10 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -28,9 +28,10 @@ public class Base2DScreen implements Screen, InputProcessor {
     private static float GL_DEFAULT_HEIGHT = 2f;
 
     protected static final float HEIGHT_AXIS_SCALE = 1f;
-    protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
 
-    private static final String STAR_TEXTURE_NAME = "star";
+    private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
+    private static final String BACKGROUND_NAME = "Space";
+    private static final String[] STAR_TEXTURE_NAMES =  { "Star", "Star1" };
     private static final int STARS_COUNT = 50;
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
@@ -41,7 +42,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     private TextureAtlas textureAtlas;
     private TextureRegion backgroundTextureRegion;
-    private TextureRegion starTextureRegion;
+    private TextureRegion[] starTextureRegions;
 
     private Background background;
     private Star[] stars;
@@ -69,23 +70,27 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.worldHeight = worldHeight;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
-        textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
 
-
+        textureAtlas = new TextureAtlas(TEXTURE_ATLAS_PATH);
         createBackground();
         createStars();
     }
 
     private void createBackground() {
-        backgroundTextureRegion = new TextureRegion( new Texture("textures/space_background.png") );
+        backgroundTextureRegion = textureAtlas.findRegion(BACKGROUND_NAME);
         background = new Background( backgroundTextureRegion );
     }
 
     private void createStars() {
-        starTextureRegion = textureAtlas.findRegion(STAR_TEXTURE_NAME);
+        int i = 0;
+        starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
+        for( String name : STAR_TEXTURE_NAMES ) {
+            starTextureRegions[i++] = textureAtlas.findRegion(name);
+        }
+
         stars = new Star[STARS_COUNT];
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i] = new Star(starTextureRegion);
+        for(i = 0; i < stars.length; ++i) {
+            stars[i] = new Star(starTextureRegions[MathUtils.random(0, starTextureRegions.length - 1)]);
         }
     }
 

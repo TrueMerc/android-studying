@@ -13,20 +13,25 @@ public class Star extends Sprite {
 
     private Rectangle worldBounds;
 
-    private static final float DEFAULT_HEIGHT = 0.01f;
+    private static final float DEFAULT_HEIGHT = 0.02f;
+    private static final float MAXIMAL_X_VELOCITY = 0.03f;
+    private static final float MAXIMAL_Y_VELOCITY = 0.25f;
 
     private Vector2 velocity;
 
-
+    /**
+     * Constructor
+     * @param region - texture region contains star image.
+     */
     public Star(TextureRegion region) {
         super(region);
         setHeight(DEFAULT_HEIGHT);
-        velocity = new Vector2(MathUtils.random(-0.005f, 0.005f), MathUtils.random(-0.5f, -0.25f));
+        velocity = new Vector2(
+                MathUtils.random(-1f * MAXIMAL_X_VELOCITY, MAXIMAL_X_VELOCITY),
+                MathUtils.random(-1f * MAXIMAL_Y_VELOCITY, -0.5f * MAXIMAL_Y_VELOCITY)
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void resize(final Rectangle worldBounds) {
         super.resize(worldBounds);
