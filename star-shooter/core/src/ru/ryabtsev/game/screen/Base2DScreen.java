@@ -30,14 +30,21 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected static final float HEIGHT_AXIS_SCALE = 1f;
     protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
 
+    private static final String STAR_TEXTURE_NAME = "star";
+    private static final int STARS_COUNT = 50;
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     protected Rectangle worldBounds;  // painting area bounds in game world coordinates
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
 
     protected SpriteBatch batch;
-    protected Texture backgroundTexture;
+
+    private TextureAtlas textureAtlas;
+    private TextureRegion backgroundTextureRegion;
+    private TextureRegion starTextureRegion;
+
     private Background background;
+    private Star[] stars;
 
     protected Matrix4 worldToGl;
     protected Matrix3 screenToWorld;
@@ -48,11 +55,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected Vector2 mousePosition;
 
     protected StarShooterGame game;
-
-    private TextureAtlas textureAtlas;
-
-    private static final int STARS_COUNT = 50;
-    private Star[] stars;
 
     /**
      * Constructor.
@@ -69,46 +71,55 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.mousePosition = new Vector2();
         textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
 
+
+        createBackground();
+        createStars();
+    }
+
+    private void createBackground() {
+        backgroundTextureRegion = new TextureRegion( new Texture("textures/space_background.png") );
+        background = new Background( backgroundTextureRegion );
+    }
+
+    private void createStars() {
+        starTextureRegion = textureAtlas.findRegion(STAR_TEXTURE_NAME);
         stars = new Star[STARS_COUNT];
         for(int i = 0; i < stars.length; ++i) {
-            stars[i] = new Star(textureAtlas);
+            stars[i] = new Star(starTextureRegion);
         }
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void show() {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().idt();
+
         Gdx.input.setInputProcessor( this );
 
-        backgroundTexture = new Texture("textures/space_background.png");
-        background = new Background( new TextureRegion(backgroundTexture) );
         resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
 
-    /**
-     * {@inheritDoc}
-     * @param delta
-     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        background.draw(batch);
-        batch.end();
+        update(delta);
+        draw();
     }
 
+    /**
+     * Updates screen objects.
+     * @param delta - time period between method calls.
+     */
     public void update(float delta) {
         for(int i = 0; i < stars.length; ++i) {
             stars[i].update(delta);
         }
     }
 
+    /**
+     * Draws screen objects.
+     */
     public void draw() {
         batch.begin();
         background.draw(batch);
@@ -132,8 +143,8 @@ public class Base2DScreen implements Screen, InputProcessor {
         Matrices.inplaceSetTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
         Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
-        background.resize(worldBounds);
 
+        background.resize(worldBounds);
         for(int i = 0; i < stars.length; ++i) {
             stars[i].resize(worldBounds);
         }
@@ -151,12 +162,11 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-        dispose();
     }
 
     @Override
     public void dispose() {
-        backgroundTexture.dispose();
+        textureAtlas.dispose();
         batch.dispose();
     }
 
@@ -177,9 +187,6 @@ public class Base2DScreen implements Screen, InputProcessor {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
@@ -202,7 +209,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     public boolean mouseMoved(final Vector2 position) {
         return false;
     }
-
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {

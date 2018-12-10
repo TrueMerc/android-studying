@@ -13,14 +13,10 @@ public class Star extends Sprite {
 
     private Rectangle worldBounds;
 
-    private static final String STAR_TEXTURE_NAME = "star";
     private static final float DEFAULT_HEIGHT = 0.01f;
 
     private Vector2 velocity;
 
-    public Star(TextureAtlas atlas) {
-        this(atlas.findRegion(STAR_TEXTURE_NAME));
-    }
 
     public Star(TextureRegion region) {
         super(region);
