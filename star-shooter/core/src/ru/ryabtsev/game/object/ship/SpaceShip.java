@@ -19,24 +19,25 @@ public class SpaceShip extends Sprite {
     private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f;
     private static final float VELOCITY_SCALE = 0.01f;
 
+    private SpaceShipType spaceShipType;
+    private BulletPool bulletPool;
     private Rectangle worldBounds;
     private Vector2 velocity;
     private Vector2 destination;
     private Vector2 temporary;  // Temporary vector for usage in update() method.
 
-    private BulletPool bulletPool;
-    private TextureAtlas atlas;
-    private Sound fireSound;
 
+    private Sound fireSound;
 
     /**
      * Constructor.
-     * @param region - space ship elements object texture atlas.
+     * @param type - space ship type.
      * @param bulletPool - pool of bullet objects associated with spaceship.
      * @param worldBounds - bound of the game world.
      */
-    public SpaceShip(TextureRegion region, BulletPool bulletPool, Rectangle worldBounds) {
-        super(region);
+    public SpaceShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
+        super(type.getTextureRegion(0));
+        spaceShipType = type;
         center.set( new Vector2(0f, 0f) );
         this.worldBounds = worldBounds;
 
@@ -44,7 +45,6 @@ public class SpaceShip extends Sprite {
         velocity = new Vector2( 0, 0);
         temporary = new Vector2( 0, 0);
 
-        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         this.bulletPool = bulletPool;
 
         fireSound = Gdx.audio.newSound( Gdx.files.internal("sounds/laser-shoot.wav"));
@@ -108,7 +108,7 @@ public class SpaceShip extends Sprite {
      */
     public void fire() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, atlas.findRegion("bulletMainShip"), center, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
+        bullet.set(this, center, spaceShipType.getBulletType(), worldBounds);
         fireSound.play(0.75f);
     }
 

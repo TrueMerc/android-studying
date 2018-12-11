@@ -10,12 +10,9 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
  */
 public class EnemyShip extends SpaceShip {
     /**
-     * Constructor.
-     * @param region      - space ship elements object texture atlas.
-     * @param bulletPool  - pool of bullet objects associated with spaceship.
-     * @param worldBounds - bound of the game world.
+     * {@inheritDoc}
      */
-    public EnemyShip(TextureRegion region, BulletPool bulletPool, Rectangle worldBounds) {
-        super(region, bulletPool, worldBounds);
+    public EnemyShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
+        super(type, bulletPool, worldBounds);
     }
 }

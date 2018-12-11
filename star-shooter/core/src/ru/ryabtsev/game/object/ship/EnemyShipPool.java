@@ -12,13 +12,13 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
 
 public class EnemyShipPool extends SpritesPool {
 
-    private Set<ShipType> shipTypes;
+    private Set<SpaceShipType> shipTypes;
     private TextureRegion[] textures;
     private BulletPool bulletPool;
     private Rectangle worldBounds;
 
     EnemyShipPool(TextureRegion[] textures, BulletPool bulletPool, Rectangle worldBounds) {
-        this.shipTypes = new HashSet<ShipType>();
+        this.shipTypes = new HashSet<SpaceShipType>();
         this.textures = textures;
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
@@ -26,14 +26,14 @@ public class EnemyShipPool extends SpritesPool {
 
     /**
      * Adds new ship type in enemy ship pool.
-     * @param type
+     * @param type - enemy space ship type.
      */
-    void addShipType(ShipType type) {
+    void addShipType(SpaceShipType type) {
         shipTypes.add( type );
     }
 
     @Override
     protected Sprite newObject() {
-        return new EnemyShip(textures[0], bulletPool, worldBounds);
+        return new EnemyShip(shipTypes.iterator().next(), bulletPool, worldBounds);
     }
 }

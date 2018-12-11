@@ -2,12 +2,15 @@ package ru.ryabtsev.game.screen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.bullet.BulletPool;
+import ru.ryabtsev.game.object.bullet.BulletType;
 import ru.ryabtsev.game.object.ship.PlayerShip;
+import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
 /**
@@ -16,17 +19,42 @@ import ru.ryabtsev.game.object.ship.SpaceShip;
 public class GameScreen extends Base2DScreen {
 
     private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
+    private static final float PLAYER_SPACE_SHIP_SPEED = 0.01f;
+
+
+    private TextureAtlas gameScreenTextures;
 
     private Texture spaceShipTexture;
 
     private BulletPool bulletPool;
+
+    private BulletType playerBulletType;
+    private SpaceShipType playerShipType;
     private SpaceShip playerShip;
+
 
     public GameScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
+        gameScreenTextures = new TextureAtlas( "textures/mainAtlas.tpack") ;
         spaceShipTexture = new Texture( "textures/star_ship.png");
         bulletPool = new BulletPool();
-        playerShip = new PlayerShip(new TextureRegion(spaceShipTexture), bulletPool, worldBounds);
+
+        playerBulletType = new BulletType(
+                gameScreenTextures.findRegion("bulletMainShip"), 0.01f,
+                new Vector2(0, 0.5f), 1
+        );
+
+        playerShipType = new SpaceShipType( loadPlayerShipTextures(),
+                playerBulletType, PLAYER_SPACE_SHIP_SPEED, "Simple player space ship"
+        );
+
+        playerShip = new PlayerShip(playerShipType, bulletPool, worldBounds);
+    }
+
+    private TextureRegion[] loadPlayerShipTextures() {
+        TextureRegion[] playerShipTextures = new TextureRegion[1];
+        playerShipTextures[0] = new TextureRegion( spaceShipTexture );
+        return playerShipTextures;
     }
 
     @Override

@@ -9,17 +9,20 @@ import com.badlogic.gdx.math.Vector2;
 public class BulletType {
 
     private TextureRegion textureRegion;
+    private float height;
     private Vector2 velocity;
     private int damage;
 
     /**
      * Constructor.
      * @param textureRegion - region of texture which contains bullet picture.
+     * @param height - height in world coordinates.
      * @param velocity - bullet velocity.
      * @param damage - damage rate.
      */
-    BulletType( TextureRegion textureRegion, Vector2 velocity, int damage) {
+    public BulletType( TextureRegion textureRegion, float height, Vector2 velocity, int damage) {
         this.textureRegion = textureRegion;
+        this.height = height;
         this.velocity = velocity;
         this.damage = damage;
     }
@@ -29,8 +32,8 @@ public class BulletType {
      * @param velocity - bullet velocity.
      * @param damage - damage rate.
      */
-    BulletType( Vector2 velocity, int damage) {
-        this( null, velocity, damage );
+    public BulletType( Vector2 velocity, int damage) {
+        this( null, 0f, velocity, damage );
     }
 
 
@@ -39,6 +42,10 @@ public class BulletType {
      */
     TextureRegion getTextureRegion() {
         return textureRegion;
+    }
+
+    float getHeight() {
+        return height;
     }
 
     /**

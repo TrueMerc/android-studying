@@ -29,22 +29,14 @@ public class Bullet extends Sprite implements Destroyable {
         isDestroyed = false;
     }
 
-    public void set(
-            Object owner,
-            TextureRegion region,
-            Vector2 pos0,
-            Vector2 v0,
-            float height,
-            Rectangle worldBounds,
-            int damage
-    ) {
+    public void set( Object owner, Vector2 pos0, BulletType type, Rectangle worldBounds ) {
         this.owner = owner;
-        this.regions[0] = region;
         this.center.set(pos0);
-        this.velocity.set(v0);
-        setHeight(height);
+        this.regions[0] = type.getTextureRegion();
+        setHeight(type.getHeight());
+        this.velocity.set( type.getVelocity() );
+        this.damage = type.getDamage();
         this.worldBounds = worldBounds;
-        this.damage = damage;
     }
 
     @Override
