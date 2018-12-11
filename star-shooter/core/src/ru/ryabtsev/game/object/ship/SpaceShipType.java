@@ -8,7 +8,7 @@ import ru.ryabtsev.game.object.bullet.BulletType;
 /**
  * Class for different ship types desctiption.
  */
-public class ShipType {
+public class SpaceShipType {
     private TextureRegion[] textureRegions;
     private BulletType bulletType;
     private float speed;
@@ -21,7 +21,7 @@ public class ShipType {
      * @param speed - speed for ships of given type.
      * @param description - ship type description.
      */
-    ShipType( TextureRegion[] textureRegions, BulletType bulletType, float speed, String description) {
+    public SpaceShipType(TextureRegion[] textureRegions, BulletType bulletType, float speed, String description) {
         this.textureRegions = textureRegions;
         this.bulletType = bulletType;
         this.speed = speed;
@@ -31,7 +31,7 @@ public class ShipType {
     /**
      * Returns all texture regions for given space ship type.
      */
-    TextureRegion[] getTextureRegions() {
+    public TextureRegion[] getTextureRegions() {
         return textureRegions;
     }
 
@@ -39,22 +39,28 @@ public class ShipType {
      * Returns specific texture region for given space ship type.
      * @param - texture region number.
      */
-    TextureRegion getTextureRegion(int number) {
+    public TextureRegion getTextureRegion(int number) {
         return textureRegions[number];
+    }
+
+    /**
+     * Returns type of bullets which space ships of this type using.
+     */
+    public BulletType getBulletType() {
+        return bulletType;
     }
 
     /**
      * Returns speed for given ship type.
      */
-    float getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
     /**
      * Return description for given ship type.
      */
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
-
 }
