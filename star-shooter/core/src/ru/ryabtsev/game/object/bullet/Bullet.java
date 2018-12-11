@@ -1,9 +1,11 @@
-package ru.ryabtsev.game.object;
+package ru.ryabtsev.game.object.bullet;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Destroyable;
+import ru.ryabtsev.game.object.Sprite;
 
 /**
  * Bullet object.
@@ -14,9 +16,9 @@ public class Bullet extends Sprite implements Destroyable {
 
     private Vector2 velocity = new Vector2();
 
-    private int damage;
-
     private Object owner;
+
+    private int damage;
 
     private boolean isDestroyed;
 

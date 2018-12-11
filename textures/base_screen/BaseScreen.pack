@@ -1,0 +1,47 @@
+
+BaseScreen.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Stars
+  rotate: false
+  xy: 1, 912
+  size: 1024, 1024
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+Nebula3
+  rotate: false
+  xy: 1, 21
+  size: 791, 889
+  orig: 791, 889
+  offset: 0, 0
+  index: -1
+Nebula2
+  rotate: false
+  xy: 1027, 1217
+  size: 800, 719
+  orig: 800, 719
+  offset: 0, 0
+  index: -1
+Nebula1
+  rotate: false
+  xy: 1027, 651
+  size: 751, 564
+  orig: 751, 564
+  offset: 0, 0
+  index: -1
+Star1
+  rotate: false
+  xy: 1, 1
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+Star
+  rotate: false
+  xy: 1829, 1926
+  size: 11, 10
+  orig: 11, 10
+  offset: 0, 0
+  index: -1

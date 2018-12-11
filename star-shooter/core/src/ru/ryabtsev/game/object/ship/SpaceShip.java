@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
-import ru.ryabtsev.game.object.Bullet;
-import ru.ryabtsev.game.object.BulletPool;
+import ru.ryabtsev.game.object.bullet.Bullet;
+import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.Sprite;
 
 /**

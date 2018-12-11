@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
-import ru.ryabtsev.game.object.BulletPool;
+import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
@@ -83,15 +83,19 @@ public class GameScreen extends Base2DScreen {
     public boolean keyDown(int keycode) {
         switch(keycode) {
             case Input.Keys.DOWN:
+            case Input.Keys.S:
                 playerShip.setDestination( playerShip.getCenter().sub( 0, KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.LEFT:
+            case Input.Keys.A:
                 playerShip.setDestination( playerShip.getCenter().sub( KEYBOARD_MOVEMENT_STEP, 0) );
                 break;
             case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 playerShip.setDestination( playerShip.getCenter().add( KEYBOARD_MOVEMENT_STEP, 0 ) );
                 break;
             case Input.Keys.UP:
+            case Input.Keys.W:
                 playerShip.setDestination( playerShip.getCenter().add( 0,  KEYBOARD_MOVEMENT_STEP) );
                 break;
             case Input.Keys.M:
