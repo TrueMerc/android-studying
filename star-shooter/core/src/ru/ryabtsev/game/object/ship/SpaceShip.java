@@ -1,4 +1,4 @@
-package ru.ryabtsev.game.object;
+package ru.ryabtsev.game.object.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Bullet;
+import ru.ryabtsev.game.object.BulletPool;
+import ru.ryabtsev.game.object.Sprite;
 
 /**
  * Base class for all space ships in the game.
@@ -76,6 +79,10 @@ public class SpaceShip extends Sprite {
 
     public void moveTo( final Vector2 position ) {
         stop();
+        if( worldBounds.isIntercect(this ) && !worldBounds.isInside(position) ) {
+            return;
+        }
+        handleBounds( position );
         center.set( position );
     }
 
@@ -109,7 +116,6 @@ public class SpaceShip extends Sprite {
      * Stops space ship.
      */
     public void stop() {
-        destination.set(center);
         velocity.set( 0f, 0f);
     }
 

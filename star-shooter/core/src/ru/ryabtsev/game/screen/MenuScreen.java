@@ -1,13 +1,12 @@
 package ru.ryabtsev.game.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
-import ru.ryabtsev.game.object.ExitButton;
-import ru.ryabtsev.game.object.MenuButton;
-import ru.ryabtsev.game.object.PlayButton;
+import ru.ryabtsev.game.object.button.ExitButton;
+import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.PlayButton;
 
 /**
  * Game menu class.

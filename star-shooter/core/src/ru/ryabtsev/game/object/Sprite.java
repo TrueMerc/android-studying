@@ -17,7 +17,6 @@ public class Sprite extends Rectangle {
     protected TextureRegion regions[];
     protected int currentRegionId;
 
-
     /**
      * Default constructor.
      */
