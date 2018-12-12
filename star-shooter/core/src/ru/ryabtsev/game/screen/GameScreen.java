@@ -4,14 +4,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
+import ru.ryabtsev.game.object.ship.EnemyShip;
+import ru.ryabtsev.game.object.ship.EnemyShipPool;
 import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
+
+import ru.geekbrains.utils.Regions;
 
 /**
  * Game main screen class.
@@ -32,12 +37,24 @@ public class GameScreen extends Base2DScreen {
     private SpaceShipType playerShipType;
     private SpaceShip playerShip;
 
+    private BulletType enemyBulletType;
+    private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
+    private EnemyShipPool enemyShips;
+
+
+    private float enemyRessurectionCounter = 0f;
 
     public GameScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
         gameScreenTextures = new TextureAtlas( "textures/mainAtlas.tpack") ;
-        spaceShipTexture = new Texture( "textures/star_ship.png");
+
         bulletPool = new BulletPool();
+        initPlayer();
+        initEnemies();
+    }
+
+    private void initPlayer() {
+        spaceShipTexture = new Texture( "textures/star_ship.png");
 
         playerBulletType = new BulletType(
                 gameScreenTextures.findRegion("bulletMainShip"), 0.01f,
@@ -51,6 +68,26 @@ public class GameScreen extends Base2DScreen {
         playerShip = new PlayerShip(playerShipType, bulletPool, worldBounds);
     }
 
+    private void initEnemies() {
+        enemyBulletType = new BulletType( gameScreenTextures.findRegion("bulletEnemy"), 0.01f,
+                new Vector2(0, 0.5f), 1
+        );
+
+        for(int i = 0; i < enemyShipTypes.length; ++i) {
+            StringBuffer stringBuffer = new StringBuffer("enemy" + i);
+
+            TextureRegion[] textureRegions;
+            TextureRegion region = gameScreenTextures.findRegion(stringBuffer.toString());
+            textureRegions = Regions.split( region, 1, 2, 2);
+
+            enemyShipTypes[i] = new SpaceShipType( textureRegions,
+                    enemyBulletType, PLAYER_SPACE_SHIP_SPEED, "Enemy space ship"
+            );
+        }
+
+        enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, worldBounds);
+    }
+
     private TextureRegion[] loadPlayerShipTextures() {
         TextureRegion[] playerShipTextures = new TextureRegion[1];
         playerShipTextures[0] = new TextureRegion( spaceShipTexture );
@@ -59,7 +96,8 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public void show() {
-        super.show();
+       super.show();
+       playerShip.moveTo( new Vector2( 0, worldBounds.getBottom() + playerShip.getHeight()) );
     }
 
     @Override
@@ -81,8 +119,22 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
+        placeNewEnemy( delta );
         playerShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyShips.updateActiveSprites(delta);
+    }
+
+    private void placeNewEnemy(float delta) {
+        enemyRessurectionCounter += delta;
+        if( enemyRessurectionCounter > 240f * delta) {
+            EnemyShip ship = enemyShips.obtain();
+            ship.resize(worldBounds);
+            float x = MathUtils.random( worldBounds.getLeft() + ship.getWidth(), worldBounds.getRight() - ship.getWidth());
+            ship.moveTo( new Vector2(x, worldBounds.getTop() - ship.getHeight()));
+            ship.setDestination( new Vector2( x, worldBounds.getBottom() - 0.1f ) );
+            enemyRessurectionCounter = 0f;
+        }
     }
 
     @Override
@@ -91,13 +143,14 @@ public class GameScreen extends Base2DScreen {
         batch.begin();
         playerShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyShips.drawActiveSprites(batch);
         batch.end();
     }
 
     @Override
     public void dispose() {
         spaceShipTexture.dispose();
-        spaceShipTexture.dispose();
+        gameScreenTextures.dispose();
         super.dispose();
     }
 

@@ -17,14 +17,14 @@ import ru.ryabtsev.game.object.Sprite;
 public class SpaceShip extends Sprite {
 
     private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f;
-    private static final float VELOCITY_SCALE = 0.01f;
+    protected static final float VELOCITY_SCALE = 0.001f;
 
     private SpaceShipType spaceShipType;
     private BulletPool bulletPool;
-    private Rectangle worldBounds;
-    private Vector2 velocity;
-    private Vector2 destination;
-    private Vector2 temporary;  // Temporary vector for usage in update() method.
+    protected Rectangle worldBounds;
+    protected Vector2 velocity;
+    protected Vector2 destination;
+    protected Vector2 temporary;  // Temporary vector for usage in update() method.
 
 
     private Sound fireSound;
@@ -38,7 +38,7 @@ public class SpaceShip extends Sprite {
     public SpaceShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
         super(type.getTextureRegion(0));
         spaceShipType = type;
-        center.set( new Vector2(0f, 0f) );
+        center.set( 0, 0);
         this.worldBounds = worldBounds;
 
         destination = new Vector2( 0, 0);
