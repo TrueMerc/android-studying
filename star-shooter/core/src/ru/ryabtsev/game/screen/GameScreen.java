@@ -70,7 +70,7 @@ public class GameScreen extends Base2DScreen {
 
     private void initEnemies() {
         enemyBulletType = new BulletType( gameScreenTextures.findRegion("bulletEnemy"), 0.01f,
-                new Vector2(0, 0.5f), 1
+                new Vector2(0, -0.5f), 1
         );
 
         for(int i = 0; i < enemyShipTypes.length; ++i) {
@@ -131,7 +131,7 @@ public class GameScreen extends Base2DScreen {
             EnemyShip ship = enemyShips.obtain();
             ship.resize(worldBounds);
             float x = MathUtils.random( worldBounds.getLeft() + ship.getWidth(), worldBounds.getRight() - ship.getWidth());
-            ship.moveTo( new Vector2(x, worldBounds.getTop() - ship.getHeight()));
+            ship.moveTo( new Vector2(x, worldBounds.getTop() + ship.getHeight()));
             ship.setDestination( new Vector2( x, worldBounds.getBottom() - 0.1f ) );
             enemyRessurectionCounter = 0f;
         }

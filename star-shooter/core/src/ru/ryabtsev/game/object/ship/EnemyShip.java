@@ -12,7 +12,11 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
+    private static final float SHOOTING_RATE = 1f;
+
     private boolean isDestroyed;
+    private boolean openFire;
+    private float fireCounter;
 
     /**
      * {@inheritDoc}
@@ -20,17 +24,35 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     public EnemyShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
         super(type, bulletPool, worldBounds);
         velocity.set( 0, 0);
+        openFire = false;
+        fireCounter = 0;
     }
 
 
     @Override
     public void update( float delta ) {
         super.update( delta );
-        if (!worldBounds.isInside(center)) {
+        if( openFire && fireCounter > SHOOTING_RATE) {
+            this.fire();
+            fireCounter = 0f;
+        }
+        else {
+            if( worldBounds.isInside(this) ) {
+                openFire = true;
+            }
+            fireCounter += delta;
+        }
+
+        if (!worldBounds.isInside(center) && center.y < worldBounds.getBottom()) {
             destroy();
         }
     }
 
+    @Override
+    public void moveTo( final Vector2 position ) {
+        stop();
+        center.set( position );
+    }
 
     @Override
     public void setDestination(final Vector2 position) {
@@ -57,6 +79,7 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     @Override
     public void destroy() {
         isDestroyed = true;
+        openFire = false;
     }
 
     /**
