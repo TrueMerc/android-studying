@@ -1,4 +1,4 @@
-package ru.ryabtsev.game.object;
+package ru.ryabtsev.game.object.button;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;

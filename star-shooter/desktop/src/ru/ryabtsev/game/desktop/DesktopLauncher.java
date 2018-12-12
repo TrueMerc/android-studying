@@ -9,8 +9,10 @@ import ru.ryabtsev.game.StarShooterGame;
  */
 public class DesktopLauncher {
 
-	private static final int DEFAULT_WIDTH = 640;
-	private static final int DEFAULT_HEIGHT = 480;
+//	private static final int DEFAULT_WIDTH = 500;
+//	private static final int DEFAULT_HEIGHT = 800;
+	private static final int DEFAULT_WIDTH = 800;
+	private static final int DEFAULT_HEIGHT = 500;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

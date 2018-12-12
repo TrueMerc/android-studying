@@ -5,10 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -28,16 +28,24 @@ public class Base2DScreen implements Screen, InputProcessor {
     private static float GL_DEFAULT_HEIGHT = 2f;
 
     protected static final float HEIGHT_AXIS_SCALE = 1f;
-    protected static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
 
+    private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
+    private static final String BACKGROUND_NAME = "Space";
+    private static final String[] STAR_TEXTURE_NAMES =  { "Star", "Star1" };
+    private static final int STARS_COUNT = 50;
 
     protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     protected Rectangle worldBounds;  // painting area bounds in game world coordinates
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
 
     protected SpriteBatch batch;
-    protected Texture backgroundTexture;
+
+    private TextureAtlas textureAtlas;
+    private TextureRegion backgroundTextureRegion;
+    private TextureRegion[] starTextureRegions;
+
     private Background background;
+    private Star[] stars;
 
     protected Matrix4 worldToGl;
     protected Matrix3 screenToWorld;
@@ -48,11 +56,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected Vector2 mousePosition;
 
     protected StarShooterGame game;
-
-    private TextureAtlas textureAtlas;
-
-    private static final int STARS_COUNT = 50;
-    private Star[] stars;
 
     /**
      * Constructor.
@@ -67,48 +70,61 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.worldHeight = worldHeight;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
-        textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
+
+        textureAtlas = new TextureAtlas(TEXTURE_ATLAS_PATH);
+        createBackground();
+        createStars();
+    }
+
+    private void createBackground() {
+        backgroundTextureRegion = textureAtlas.findRegion(BACKGROUND_NAME);
+        background = new Background( backgroundTextureRegion );
+    }
+
+    private void createStars() {
+        int i = 0;
+        starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
+        for( String name : STAR_TEXTURE_NAMES ) {
+            starTextureRegions[i++] = textureAtlas.findRegion(name);
+        }
 
         stars = new Star[STARS_COUNT];
-        for(int i = 0; i < stars.length; ++i) {
-            stars[i] = new Star(textureAtlas);
+        for(i = 0; i < stars.length; ++i) {
+            stars[i] = new Star(starTextureRegions[MathUtils.random(0, starTextureRegions.length - 1)]);
         }
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void show() {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().idt();
+
         Gdx.input.setInputProcessor( this );
 
-        backgroundTexture = new Texture("textures/space_background.png");
-        background = new Background( new TextureRegion(backgroundTexture) );
         resize( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
     }
 
-    /**
-     * {@inheritDoc}
-     * @param delta
-     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        background.draw(batch);
-        batch.end();
+        update(delta);
+        draw();
     }
 
+    /**
+     * Updates screen objects.
+     * @param delta - time period between method calls.
+     */
     public void update(float delta) {
         for(int i = 0; i < stars.length; ++i) {
             stars[i].update(delta);
         }
     }
 
+    /**
+     * Draws screen objects.
+     */
     public void draw() {
         batch.begin();
         background.draw(batch);
@@ -132,8 +148,8 @@ public class Base2DScreen implements Screen, InputProcessor {
         Matrices.inplaceSetTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
         Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
-        background.resize(worldBounds);
 
+        background.resize(worldBounds);
         for(int i = 0; i < stars.length; ++i) {
             stars[i].resize(worldBounds);
         }
@@ -151,12 +167,11 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-        dispose();
     }
 
     @Override
     public void dispose() {
-        backgroundTexture.dispose();
+        textureAtlas.dispose();
         batch.dispose();
     }
 
@@ -177,9 +192,6 @@ public class Base2DScreen implements Screen, InputProcessor {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
@@ -202,7 +214,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     public boolean mouseMoved(final Vector2 position) {
         return false;
     }
-
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {

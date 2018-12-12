@@ -1,17 +1,18 @@
-package ru.ryabtsev.game.object;
+package ru.ryabtsev.game.object.button;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Sprite;
 
 /**
  * Game menu buttons class.
  */
 abstract public class MenuButton extends Sprite {
 
-    private static final float DEFAULT_HEIGHT = 0.3f;
+    private static final float DEFAULT_HEIGHT = 0.15f;
 
     private static final float SCALE_WHEN_SELECTED = 1.25f;
 

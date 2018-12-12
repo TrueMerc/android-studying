@@ -1,5 +1,7 @@
-package ru.ryabtsev.game.object;
+package ru.ryabtsev.game.object.bullet;
 
+
+import ru.ryabtsev.game.object.SpritesPool;
 
 /**
  * Pool for bullet objects.

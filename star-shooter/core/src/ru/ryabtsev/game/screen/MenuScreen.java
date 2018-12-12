@@ -1,13 +1,12 @@
 package ru.ryabtsev.game.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
-import ru.ryabtsev.game.object.ExitButton;
-import ru.ryabtsev.game.object.MenuButton;
-import ru.ryabtsev.game.object.PlayButton;
+import ru.ryabtsev.game.object.button.ExitButton;
+import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.PlayButton;
 
 /**
  * Game menu class.
@@ -19,12 +18,14 @@ public class MenuScreen extends Base2DScreen {
     private MenuButton playButton;
     private MenuButton exitButton;
 
+
+
     public MenuScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
         textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
 
-        playButton = new PlayButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.3f, 0), game );
-        exitButton = new ExitButton( textureAtlas.findRegion("btExit"), new Vector2( 0.3f, 0) );
+        playButton = new PlayButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.25f * worldBounds.getWidth(), 0), game );
+        exitButton = new ExitButton( textureAtlas.findRegion("btExit"), new Vector2( 0.25f * worldBounds.getWidth(), 0) );
     }
 
     @Override
@@ -53,8 +54,8 @@ public class MenuScreen extends Base2DScreen {
         super.resize(width, height);
         playButton.resize(worldBounds);
         exitButton.resize(worldBounds);
-        playButton.setPosition(new Vector2( -0.3f, 0));
-        exitButton.setPosition( new Vector2( 0.3f, 0));
+        playButton.setPosition(new Vector2( -0.25f * worldBounds.getWidth(), 0));
+        exitButton.setPosition(new Vector2( 0.25f * worldBounds.getWidth(), 0));
     }
 
     @Override
