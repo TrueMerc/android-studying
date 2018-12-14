@@ -8,6 +8,9 @@ import com.badlogic.gdx.audio.Music;
 import ru.ryabtsev.game.screen.GameScreen;
 import ru.ryabtsev.game.screen.MenuScreen;
 
+import static ru.ryabtsev.game.StarShooterGame.State.NEW;
+import static ru.ryabtsev.game.StarShooterGame.State.PAUSED;
+
 /**
  * Game main class.
  */
@@ -29,11 +32,18 @@ public class StarShooterGame extends Game {
 		}
 	}
 
+	/**
+	 * Enumeration for different game states.
+	 */
+	public enum State { NEW, PLAYING, PAUSED, OVER };
+
 	private static final int screensNumber = ScreenType.values().length;
 
 	private Screen[] screens;
 
 	private Music mainTheme;
+
+	private State state;
 
 	/**
 	 * {@inheritDoc}
@@ -42,6 +52,7 @@ public class StarShooterGame extends Game {
 	public void create () {
 		createScreens();
 		createMusic();
+		state = NEW;
 	}
 
 	private void createScreens() {
@@ -64,6 +75,22 @@ public class StarShooterGame extends Game {
 	 */
 	public void setScreen(ScreenType type) {
 		setScreen( screens[type.getIndex()] );
+	}
+
+	/**
+	 * Returns game state.
+	 * @return game state.
+	 */
+	public State getState() {
+		return state;
+	}
+
+	/**
+	 * Sets game state.
+	 * @param state - new state.
+	 */
+	public void setState(State state) {
+		this.state = state;
 	}
 
 	@Override

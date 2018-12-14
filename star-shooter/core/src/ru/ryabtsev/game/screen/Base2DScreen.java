@@ -177,7 +177,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        System.out.println( "keyUp key code = " + keycode);
+        //System.out.println( "keyUp key code = " + keycode);
         return false;
     }
 
@@ -188,8 +188,8 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
-        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
+        //System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
+        //System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
         touch.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
         return touchDown( touch, pointer, button);
     }
@@ -221,9 +221,9 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        System.out.println( "Touch dragged: (" + screenX + ", "  + screenY + ")" );
+        //System.out.println( "Touch dragged: (" + screenX + ", "  + screenY + ")" );
         touch.set( screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
-        System.out.println( "Touch dragged: " + touch );
+        //System.out.println( "Touch dragged: " + touch );
         return touchDragged( touch, pointer);
     }
 

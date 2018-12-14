@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 
 import ru.ryabtsev.game.StarShooterGame;
+import ru.ryabtsev.game.object.Sprite;
 import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
@@ -44,20 +45,33 @@ public class GameScreen extends Base2DScreen {
     private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
     private EnemyShipPool enemyShips;
 
+    private Sprite gameOverMessage;
+
     private float enemyResurrectionCounter = 0f;
+
 
     public GameScreen(StarShooterGame game) {
         super(game);
+
+        initResources();
+        initPlayer();
+        initEnemies();
+    }
+
+    private void initResources() {
         gameScreenTextures = new TextureAtlas( "textures/GameScreen.pack") ;
+
+        TextureRegion gameOverRegion = gameScreenTextures.findRegion("MessageGameOver");
+        gameOverMessage = new Sprite(gameOverRegion);
+        gameOverMessage.setHeight(0.1f);
+
+
 
         bulletPool = new BulletPool();
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
+
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
-
         explosionPool = new ExplosionPool(gameScreenTextures, explosionSound);
-
-        initPlayer();
-        initEnemies();
     }
 
     private void initPlayer() {
@@ -67,13 +81,13 @@ public class GameScreen extends Base2DScreen {
 
         BulletType bulletType = new BulletType(
                 gameScreenTextures.findRegion("BulletPlayer"), 0.01f,
-                new Vector2(0, 0.5f), 100
+                new Vector2(0, 0.5f), 5
         );
 
         Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
 
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 100, "Player space ship"
+                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, explosionPool, worldBounds);
@@ -82,7 +96,7 @@ public class GameScreen extends Base2DScreen {
     private void initEnemies() {
         for(int i = 0; i < enemyShipTypes.length; ++i) {
             BulletType bulletType = new BulletType( gameScreenTextures.findRegion("BulletEnemy"),
-                    0.01f * (i + 1), new Vector2(0, -0.3f / (i + 1)), 1 * (i + 1)
+                    0.01f * (i + 1), new Vector2(0, -0.3f / (i + 1)), 5 * (i + 1)
             );
 
             Weapon weapon = new Weapon(bulletType, fireSound, 3f + 0.5f * i);
@@ -103,15 +117,22 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void show() {
        super.show();
-       playerShip.moveTo( new Vector2( 0, worldBounds.getBottom() + playerShip.getHeight()) );
+       if( game.getState() == StarShooterGame.State.NEW) {
+           playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + playerShip.getHeight()));
+       }
+       if( game.getState() != StarShooterGame.State.OVER ) {
+           game.setState(StarShooterGame.State.PLAYING);
+       }
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        update(delta);
-        checkCollisions();
-        deleteAllDestroyed();
+        if( game.getState() == StarShooterGame.State.PLAYING) {
+            update(delta);
+            checkCollisions();
+            deleteAllDestroyed();
+        }
         draw();
     }
 
@@ -164,6 +185,9 @@ public class GameScreen extends Base2DScreen {
                 playerShip.damage(bullet.getDamage());
             }
         }
+        if( playerShip.isDestroyed() ) {
+            game.setState(StarShooterGame.State.OVER);
+        }
     }
 
     private void deleteAllDestroyed() {
@@ -188,10 +212,15 @@ public class GameScreen extends Base2DScreen {
     public void draw() {
         super.draw();
         batch.begin();
-        playerShip.draw(batch);
-        bulletPool.drawActiveSprites(batch);
-        enemyShips.drawActiveSprites(batch);
-        explosionPool.drawActiveSprites(batch);
+        if (game.getState() != StarShooterGame.State.OVER) {
+            playerShip.draw(batch);
+            bulletPool.drawActiveSprites(batch);
+            enemyShips.drawActiveSprites(batch);
+            explosionPool.drawActiveSprites(batch);
+        }
+        else {
+            gameOverMessage.draw(batch);
+        }
         batch.end();
     }
 
@@ -206,33 +235,38 @@ public class GameScreen extends Base2DScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
         playerShip.resize(worldBounds);
+        gameOverMessage.resize(worldBounds);
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        switch(keycode) {
-            case Input.Keys.DOWN:
-            case Input.Keys.S:
-                playerShip.setDestination( playerShip.getCenter().sub( 0, KEYBOARD_MOVEMENT_STEP) );
-                break;
-            case Input.Keys.LEFT:
-            case Input.Keys.A:
-                playerShip.setDestination( playerShip.getCenter().sub( KEYBOARD_MOVEMENT_STEP, 0) );
-                break;
-            case Input.Keys.RIGHT:
-            case Input.Keys.D:
-                playerShip.setDestination( playerShip.getCenter().add( KEYBOARD_MOVEMENT_STEP, 0 ) );
-                break;
-            case Input.Keys.UP:
-            case Input.Keys.W:
-                playerShip.setDestination( playerShip.getCenter().add( 0,  KEYBOARD_MOVEMENT_STEP) );
-                break;
-            case Input.Keys.M:
-                game.setScreen( StarShooterGame.ScreenType.MENU );
-                return true;
-            case Input.Keys.SPACE:
-                playerShip.fire();
-                return true;
+        if( game.getState() == StarShooterGame.State.PLAYING) {
+            switch(keycode) {
+                case Input.Keys.DOWN:
+                case Input.Keys.S:
+                    playerShip.setDestination(playerShip.getCenter().sub(0, KEYBOARD_MOVEMENT_STEP));
+                    break;
+                case Input.Keys.LEFT:
+                case Input.Keys.A:
+                    playerShip.setDestination(playerShip.getCenter().sub(KEYBOARD_MOVEMENT_STEP, 0));
+                    break;
+                case Input.Keys.RIGHT:
+                case Input.Keys.D:
+                    playerShip.setDestination(playerShip.getCenter().add(KEYBOARD_MOVEMENT_STEP, 0));
+                    break;
+                case Input.Keys.UP:
+                case Input.Keys.W:
+                    playerShip.setDestination(playerShip.getCenter().add(0, KEYBOARD_MOVEMENT_STEP));
+                    break;
+                case Input.Keys.SPACE:
+                    playerShip.fire();
+                    return true;
+            }
+        }
+
+        if( keycode == Input.Keys.M) {
+            game.setScreen(StarShooterGame.ScreenType.MENU);
+            return true;
         }
         return false;
     }

@@ -11,6 +11,11 @@ import ru.ryabtsev.game.object.SpritesPool;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
+/**
+ * Pool of enemy space ships.
+ */
 public class EnemyShipPool extends SpritesPool<EnemyShip> {
 
     private Set<SpaceShipType> shipTypes;
@@ -18,6 +23,13 @@ public class EnemyShipPool extends SpritesPool<EnemyShip> {
     private ExplosionPool explosionPool;
     private Rectangle worldBounds;
 
+    /**
+     * Constructor
+     * @param enemyShipTypes - accessible enemy ships types.
+     * @param bulletPool - bullet pool.
+     * @param explosionPool - explosion pool.
+     * @param worldBounds - world bounds.
+     */
     public EnemyShipPool(SpaceShipType[] enemyShipTypes, BulletPool bulletPool, ExplosionPool explosionPool, Rectangle worldBounds) {
         this.shipTypes = new HashSet<SpaceShipType>();
         for( SpaceShipType type: enemyShipTypes) {
@@ -32,11 +44,21 @@ public class EnemyShipPool extends SpritesPool<EnemyShip> {
     protected EnemyShip newObject() {
         SpaceShipType[] shipTypesArray = new SpaceShipType[shipTypes.size()];
         shipTypesArray = shipTypes.toArray(shipTypesArray);
-        return new EnemyShip(
-                shipTypesArray[MathUtils.random(0, shipTypesArray.length - 1)],
-                bulletPool,
-                explosionPool,
-                worldBounds
-        );
+        return new EnemyShip(shipTypesArray[getTypeIndex()], bulletPool, explosionPool, worldBounds);
+    }
+
+    private int getTypeIndex() {
+        float random = MathUtils.random(0f, 1f);
+
+        int type = 0;
+
+        if( random > 0.5f ) {
+            type = 1;
+        }
+        if( random > 0.9f ) {
+            type = 2;
+        }
+
+        return type;
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
 import ru.ryabtsev.game.object.Destroyable;
+import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 
@@ -12,7 +13,6 @@ import ru.ryabtsev.game.object.explosion.ExplosionPool;
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
-    private boolean isDestroyed;
     private boolean openFire;
     private float fireCounter;
 
@@ -61,5 +61,19 @@ public class EnemyShip extends SpaceShip implements Destroyable {
 //        System.out.println("Current coordinates: " + center );
 //        System.out.println("Destination coordinates: " + destination );
 //        System.out.println("Velocity = " + velocity);
+    }
+
+    /**
+     * Returns true if bullet hits player space ship or false if it isn't.
+     * @param bullet bullet.
+     * @return true if bullet hits player space ship or false if it isn't.
+     */
+    @Override
+    public boolean isHit(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < getCenter().y
+        );
     }
 }

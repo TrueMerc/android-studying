@@ -15,7 +15,7 @@ import ru.ryabtsev.game.object.explosion.ExplosionPool;
 /**
  * Base class for all space ships in the game.
  */
-public class SpaceShip extends Sprite implements Destroyable {
+public abstract class SpaceShip extends Sprite implements Destroyable {
 
     protected static final float VELOCITY_SCALE = 0.001f;
 
@@ -133,7 +133,9 @@ public class SpaceShip extends Sprite implements Destroyable {
     public void damage(int hitPoints) {
         this.hitPoints -= hitPoints;
         if(this.hitPoints <= 0) {
+            System.out.println("Space ship destroyed:" + spaceShipType.getDescription());
             destroy();
+            explode();
         }
     }
 
@@ -150,8 +152,13 @@ public class SpaceShip extends Sprite implements Destroyable {
      */
     @Override
     public void destroy() {
-        System.out.println("Space ship destroyed:" + spaceShipType.getDescription());
         hitPoints = 0;
+    }
+
+    /**
+     * Explodes the object.
+     */
+    public void explode() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), getCenter());
     }
@@ -165,12 +172,9 @@ public class SpaceShip extends Sprite implements Destroyable {
     }
 
     /**
-     * Returns
+     * Returns true if bullet hits player space ship or false if it isn't.
+     * @param bullet bullet.
+     * @return true if bullet hits player space ship or false if it isn't.
      */
-    public boolean isHit(Bullet bullet) {
-        return !(bullet.getRight() < getLeft()
-                || bullet.getLeft() > getRight()
-                || bullet.getBottom() > getTop()
-                || bullet.getTop() < getCenter().y);
-    }
+     public abstract boolean isHit(Bullet bullet);
 }
