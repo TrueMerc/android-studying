@@ -21,7 +21,7 @@ public class MenuScreen extends Base2DScreen {
 
 
     public MenuScreen(StarShooterGame game) {
-        super(game, HEIGHT_AXIS_SCALE);
+        super(game);
         textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
 
         playButton = new PlayButton( textureAtlas.findRegion("btPlay"), new Vector2( -0.25f * worldBounds.getWidth(), 0), game );

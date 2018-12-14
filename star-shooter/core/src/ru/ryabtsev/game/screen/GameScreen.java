@@ -23,7 +23,7 @@ import ru.ryabtsev.game.utils.Regions;
  */
 public class GameScreen extends Base2DScreen {
 
-    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
+    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.01f;
 
     private TextureAtlas gameScreenTextures;
@@ -40,7 +40,7 @@ public class GameScreen extends Base2DScreen {
     private float enemyResurrectionCounter = 0f;
 
     public GameScreen(StarShooterGame game) {
-        super(game, HEIGHT_AXIS_SCALE);
+        super(game);
         gameScreenTextures = new TextureAtlas( "textures/mainAtlas.tpack") ;
 
         bulletPool = new BulletPool();

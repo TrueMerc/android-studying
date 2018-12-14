@@ -23,7 +23,7 @@ import ru.ryabtsev.game.object.Star;
  */
 public class Base2DScreen implements Screen, InputProcessor {
 
-    protected static final float HEIGHT_AXIS_SCALE = 1f;
+
 
     private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
     private static final String BACKGROUND_NAME = "Space";
@@ -54,16 +54,17 @@ public class Base2DScreen implements Screen, InputProcessor {
     /**
      * Constructor.
      */
-    Base2DScreen(StarShooterGame game, float worldHeight) {
+    Base2DScreen(StarShooterGame game) {
         final float GL_DEFAULT_WIDTH = 2f;
         final float GL_DEFAULT_HEIGHT = 2f;
+        final float HEIGHT_AXIS_SCALE = 1f;
         this.game  = game;
         screenBounds = new Rectangle();
         worldBounds = new Rectangle();
         glBounds = new Rectangle(0, 0, GL_DEFAULT_WIDTH, GL_DEFAULT_HEIGHT);
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
-        this.worldHeight = worldHeight;
+        this.worldHeight = HEIGHT_AXIS_SCALE;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
 
