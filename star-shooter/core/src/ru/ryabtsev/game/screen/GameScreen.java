@@ -1,13 +1,15 @@
 package ru.ryabtsev.game.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
+import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
 import ru.ryabtsev.game.object.ship.EnemyShip;
@@ -24,7 +26,7 @@ import ru.ryabtsev.game.utils.Regions;
 public class GameScreen extends Base2DScreen {
 
     private static final float KEYBOARD_MOVEMENT_STEP = 0.05f;
-    private static final float PLAYER_SPACE_SHIP_SPEED = 0.01f;
+    private static final float PLAYER_SPACE_SHIP_SPEED = 0.001f;
 
     private TextureAtlas gameScreenTextures;
 
@@ -36,12 +38,14 @@ public class GameScreen extends Base2DScreen {
     private EnemyShipPool enemyShips;
 
     private float enemyResurrectionCounter = 0f;
+    private Sound fireSound;
 
     public GameScreen(StarShooterGame game) {
         super(game);
         gameScreenTextures = new TextureAtlas( "textures/GameScreen.pack") ;
 
         bulletPool = new BulletPool();
+        fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
         initPlayer();
         initEnemies();
     }
@@ -51,13 +55,15 @@ public class GameScreen extends Base2DScreen {
         TextureRegion[] textureRegions = new TextureRegion[1];
         textureRegions[0] = gameScreenTextures.findRegion("PlayerShip");
 
-        BulletType playerBulletType = new BulletType(
+        BulletType bulletType = new BulletType(
                 gameScreenTextures.findRegion("BulletPlayer"), 0.01f,
                 new Vector2(0, 0.5f), 1
         );
 
+        Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
+
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                playerBulletType, PLAYER_SPACE_SHIP_SPEED, "Simple player space ship"
+                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 100, "Simple player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, worldBounds);
@@ -65,9 +71,11 @@ public class GameScreen extends Base2DScreen {
 
     private void initEnemies() {
         for(int i = 0; i < enemyShipTypes.length; ++i) {
-            BulletType enemyBulletType = new BulletType( gameScreenTextures.findRegion("BulletEnemy"),
+            BulletType bulletType = new BulletType( gameScreenTextures.findRegion("BulletEnemy"),
                     0.01f * (i + 1), new Vector2(0, -0.3f / (i + 1)), 1 * (i + 1)
             );
+
+            Weapon weapon = new Weapon(bulletType, fireSound, 3f + 0.5f * i);
 
             StringBuffer stringBuffer = new StringBuffer("EnemyShip" + i);
 
@@ -76,13 +84,11 @@ public class GameScreen extends Base2DScreen {
             textureRegions = Regions.split( region, 1, 2, 2);
 
             enemyShipTypes[i] = new SpaceShipType( textureRegions,
-                    enemyBulletType, PLAYER_SPACE_SHIP_SPEED, "Enemy space ship"
+                    weapon, 0.1f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 1 * (i + 1), "Enemy space ship"
             );
         }
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, worldBounds);
     }
-
-
 
     @Override
     public void show() {
@@ -140,6 +146,7 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void dispose() {
         gameScreenTextures.dispose();
+        fireSound.dispose();
         super.dispose();
     }
 

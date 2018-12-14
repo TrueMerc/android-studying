@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.Sprite;
@@ -14,19 +15,16 @@ import ru.ryabtsev.game.object.Sprite;
  */
 public class SpaceShip extends Sprite {
 
-    private static final float SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR = 0.1f;
     protected static final float VELOCITY_SCALE = 0.001f;
 
-    private SpaceShipType spaceShipType;
+    protected SpaceShipType spaceShipType;
     private BulletPool bulletPool;
     protected Rectangle worldBounds;
     protected Vector2 velocity;
     protected Vector2 destination;
     protected Vector2 temporary;  // Temporary vector for usage in update() method.
 
-
-    private Sound fireSound;
-
+    protected int hitPoints;
     /**
      * Constructor.
      * @param type - space ship type.
@@ -44,14 +42,13 @@ public class SpaceShip extends Sprite {
         temporary = new Vector2( 0, 0);
 
         this.bulletPool = bulletPool;
-
-        fireSound = Gdx.audio.newSound( Gdx.files.internal("sounds/laser-shoot.wav"));
+        hitPoints = type.getHitPoints();
     }
 
     @Override
     public void update(float delta) {
         temporary.set(destination);
-        if( temporary.sub(center).len() > VELOCITY_SCALE ) {
+        if( temporary.sub(center).len() > spaceShipType.getSpeed() ) {
             center.add(velocity);
         }
         else {
@@ -62,7 +59,7 @@ public class SpaceShip extends Sprite {
     @Override
     public void resize(final Rectangle worldBounds) {
         super.resize(worldBounds);
-        super.setHeight(SPACESHIP_TEXTURE_DEFAULT_SCALE_FACTOR);
+        super.setHeight(spaceShipType.getHeight());
     }
 
     public void setDestination(final Vector2 position) {
@@ -105,9 +102,10 @@ public class SpaceShip extends Sprite {
      * Starts fire.
      */
     public void fire() {
+        Weapon weapon = spaceShipType.getWeapon();
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, center, spaceShipType.getBulletType(), worldBounds);
-        fireSound.play(0.75f);
+        bullet.set(this, center, weapon.getBulletType(), worldBounds);
+        weapon.getSound().play(0.75f);
     }
 
     /**
@@ -117,8 +115,4 @@ public class SpaceShip extends Sprite {
         velocity.set( 0f, 0f);
     }
 
-
-    public void dispose() {
-        fireSound.dispose();
-    }
 }

@@ -11,8 +11,6 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
-    private static final float SHOOTING_RATE = 3f;
-
     private boolean isDestroyed;
     private boolean openFire;
     private float fireCounter;
@@ -31,7 +29,7 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     @Override
     public void update( float delta ) {
         super.update( delta );
-        if( openFire && fireCounter > SHOOTING_RATE) {
+        if( openFire && fireCounter > spaceShipType.getWeapon().getReloadingTime()) {
             this.fire();
             fireCounter = 0f;
         }
@@ -57,11 +55,11 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     public void setDestination(final Vector2 position) {
         stop();
         destination.set( position );
-        velocity.set( destination.cpy().sub(center) ).setLength( VELOCITY_SCALE );
+        velocity.set( destination.cpy().sub(center) ).setLength( spaceShipType.getSpeed() );
 
-        System.out.println("Current coordinates: " + center );
-        System.out.println("Destination coordinates: " + destination );
-        System.out.println("Velocity = " + velocity);
+//        System.out.println("Current coordinates: " + center );
+//        System.out.println("Destination coordinates: " + destination );
+//        System.out.println("Velocity = " + velocity);
     }
 
     /**
