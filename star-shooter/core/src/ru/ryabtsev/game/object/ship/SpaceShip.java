@@ -132,7 +132,7 @@ public class SpaceShip extends Sprite implements Destroyable {
      */
     public void damage(int hitPoints) {
         this.hitPoints -= hitPoints;
-        if(hitPoints <= 0) {
+        if(this.hitPoints <= 0) {
             destroy();
         }
     }
@@ -142,7 +142,7 @@ public class SpaceShip extends Sprite implements Destroyable {
      */
     @Override
     public boolean isDestroyed() {
-        return hitPoints > 0;
+        return hitPoints <= 0;
     }
 
     /**
@@ -150,6 +150,7 @@ public class SpaceShip extends Sprite implements Destroyable {
      */
     @Override
     public void destroy() {
+        System.out.println("Space ship destroyed:" + spaceShipType.getDescription());
         hitPoints = 0;
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), getCenter());

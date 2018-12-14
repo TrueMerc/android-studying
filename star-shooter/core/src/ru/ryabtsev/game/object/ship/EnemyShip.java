@@ -62,29 +62,4 @@ public class EnemyShip extends SpaceShip implements Destroyable {
 //        System.out.println("Destination coordinates: " + destination );
 //        System.out.println("Velocity = " + velocity);
     }
-
-    /**
-     * @return true if the object destroyed and false if it isn't destroyed.
-     */
-    @Override
-    public boolean isDestroyed() {
-        return isDestroyed;
-    }
-
-    /**
-     * Destroys the object.
-     */
-    @Override
-    public void destroy() {
-        isDestroyed = true;
-        openFire = false;
-    }
-
-    /**
-     * Makes object alive.
-     */
-    @Override
-    public void alive() {
-        isDestroyed = false;
-    }
 }

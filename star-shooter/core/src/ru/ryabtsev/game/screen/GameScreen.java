@@ -67,13 +67,13 @@ public class GameScreen extends Base2DScreen {
 
         BulletType bulletType = new BulletType(
                 gameScreenTextures.findRegion("BulletPlayer"), 0.01f,
-                new Vector2(0, 0.5f), 1
+                new Vector2(0, 0.5f), 100
         );
 
         Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
 
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 100, "Simple player space ship"
+                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 100, "Player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, explosionPool, worldBounds);
@@ -94,7 +94,7 @@ public class GameScreen extends Base2DScreen {
             textureRegions = Regions.split( region, 1, 2, 2);
 
             enemyShipTypes[i] = new SpaceShipType( textureRegions,
-                    weapon, 0.1f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 1 * (i + 1), "Enemy space ship"
+                    weapon, 0.1f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 10 * (i + 1), "Enemy space ship"
             );
         }
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, explosionPool, worldBounds);
@@ -131,9 +131,9 @@ public class GameScreen extends Base2DScreen {
             if (enemy.isDestroyed()) {
                 continue;
             }
-            float minDist = enemy.getWidth() / 2 + playerShip.getWidth();
+            float minDist = enemy.getWidth() / 2 + playerShip.getWidth() / 2;
             if (enemy.getCenter().dst2(playerShip.getCenter()) < minDist * minDist) {
-                enemy.destroy();
+                enemy.damage(enemy.getHitPoints());
                 playerShip.damage(2 * enemy.getHitPoints());
                 return;
             }
