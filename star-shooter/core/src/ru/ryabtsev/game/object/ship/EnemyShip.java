@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.ryabtsev.game.math.Rectangle;
 import ru.ryabtsev.game.object.Destroyable;
 import ru.ryabtsev.game.object.bullet.BulletPool;
+import ru.ryabtsev.game.object.explosion.ExplosionPool;
 
 /**
  * Enemy ships base class.
@@ -18,8 +19,8 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     /**
      * {@inheritDoc}
      */
-    public EnemyShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
-        super(type, bulletPool, worldBounds);
+    public EnemyShip(SpaceShipType type, BulletPool bulletPool, ExplosionPool explosionPool, Rectangle worldBounds) {
+        super(type, bulletPool, explosionPool, worldBounds);
         velocity.set( 0, 0);
         openFire = false;
         fireCounter = 0;

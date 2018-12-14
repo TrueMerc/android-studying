@@ -1,24 +1,27 @@
 package ru.ryabtsev.game.object.ship;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.object.Destroyable;
 import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.Sprite;
+import ru.ryabtsev.game.object.explosion.Explosion;
+import ru.ryabtsev.game.object.explosion.ExplosionPool;
 
 /**
  * Base class for all space ships in the game.
  */
-public class SpaceShip extends Sprite {
+public class SpaceShip extends Sprite implements Destroyable {
 
     protected static final float VELOCITY_SCALE = 0.001f;
 
     protected SpaceShipType spaceShipType;
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
     protected Rectangle worldBounds;
     protected Vector2 velocity;
     protected Vector2 destination;
@@ -31,7 +34,7 @@ public class SpaceShip extends Sprite {
      * @param bulletPool - pool of bullet objects associated with spaceship.
      * @param worldBounds - bound of the game world.
      */
-    public SpaceShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
+    public SpaceShip(SpaceShipType type, BulletPool bulletPool, ExplosionPool explosionPool, Rectangle worldBounds) {
         super(type.getTextureRegion(0));
         spaceShipType = type;
         center.set( 0, 0);
@@ -42,6 +45,7 @@ public class SpaceShip extends Sprite {
         temporary = new Vector2( 0, 0);
 
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         hitPoints = type.getHitPoints();
     }
 
@@ -115,4 +119,57 @@ public class SpaceShip extends Sprite {
         velocity.set( 0f, 0f);
     }
 
+    /**
+     * Returns space ship hit points number.
+     * @return space ship hit points number.
+     */
+    public int getHitPoints() {
+        return hitPoints;
+    }
+
+    /**
+     * Damages space ship on given hit points number.
+     */
+    public void damage(int hitPoints) {
+        this.hitPoints -= hitPoints;
+        if(hitPoints <= 0) {
+            destroy();
+        }
+    }
+
+    /**
+     * @return true if the object destroyed and false if it isn't destroyed.
+     */
+    @Override
+    public boolean isDestroyed() {
+        return hitPoints > 0;
+    }
+
+    /**
+     * Destroys the object.
+     */
+    @Override
+    public void destroy() {
+        hitPoints = 0;
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), getCenter());
+    }
+
+    /**
+     * Makes object alive.
+     */
+    @Override
+    public void alive() {
+        hitPoints = spaceShipType.getHitPoints();
+    }
+
+    /**
+     * Returns
+     */
+    public boolean isHit(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < getCenter().y);
+    }
 }

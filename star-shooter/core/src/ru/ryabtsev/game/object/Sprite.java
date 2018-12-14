@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
+import ru.ryabtsev.game.utils.Regions;
 
 /**
  * Base class for game objects which renders using sprites.
@@ -29,11 +30,23 @@ public class Sprite extends Rectangle {
 
     /**
      * Constructor.
-     * @param region - sprite object texture.
+     * @param region - sprite object texture region.
      */
     public Sprite(TextureRegion region) {
         this();
         regions[0] = region;
+    }
+
+    /**
+     * Constructor.
+     * @param region - sprite object texture region.
+     * @param rows - rows number in sprite object texture region.
+     * @param columns - columns number in sprite object texture region.
+     * @param frames - frames number in sprite object texture region.
+     */
+    public Sprite(TextureRegion region, int rows, int columns, int frames) {
+        this();
+        regions = Regions.split(region, rows, columns, frames);
     }
 
     /**
