@@ -2,11 +2,10 @@ package ru.ryabtsev.game.object.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletType;
 
 /**
- * Class for different ship types desctiption.
+ * Class for different ship types description.
  */
 public class SpaceShipType {
     private TextureRegion[] textureRegions;

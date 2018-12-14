@@ -37,7 +37,11 @@ public class EnemyShipPool extends SpritesPool<EnemyShip> {
 
     @Override
     protected EnemyShip newObject() {
-        SpaceShipType[] typesArray = shipTypes.toArray(new SpaceShipType[shipTypes.size()]);
-        return new EnemyShip(typesArray[MathUtils.random(0, typesArray.length - 1)], bulletPool, worldBounds);
+
+        SpaceShipType[] shipTypesArray = new SpaceShipType[shipTypes.size()];
+        shipTypesArray = shipTypes.toArray(shipTypesArray);
+        //SpaceShipType[] typesArray = shipTypes.toArray(new SpaceShipType[shipTypes.size()]);
+        return new EnemyShip(shipTypesArray[MathUtils.random(0, shipTypesArray.length - 1)], bulletPool, worldBounds);
+        //return new EnemyShip(shipTypes.toArray()[MathUtils.random(0, shipTypes.size() - 1)], bulletPool, worldBounds);
     }
 }

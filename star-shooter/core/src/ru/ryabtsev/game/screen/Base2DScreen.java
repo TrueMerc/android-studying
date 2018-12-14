@@ -1,6 +1,5 @@
 package ru.ryabtsev.game.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -24,9 +23,6 @@ import ru.ryabtsev.game.object.Star;
  */
 public class Base2DScreen implements Screen, InputProcessor {
 
-    private static float GL_DEFAULT_WIDTH = 2f;
-    private static float GL_DEFAULT_HEIGHT = 2f;
-
     protected static final float HEIGHT_AXIS_SCALE = 1f;
 
     private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
@@ -41,8 +37,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     protected SpriteBatch batch;
 
     private TextureAtlas textureAtlas;
-    private TextureRegion backgroundTextureRegion;
-    private TextureRegion[] starTextureRegions;
 
     private Background background;
     private Star[] stars;
@@ -61,6 +55,8 @@ public class Base2DScreen implements Screen, InputProcessor {
      * Constructor.
      */
     Base2DScreen(StarShooterGame game, float worldHeight) {
+        final float GL_DEFAULT_WIDTH = 2f;
+        final float GL_DEFAULT_HEIGHT = 2f;
         this.game  = game;
         screenBounds = new Rectangle();
         worldBounds = new Rectangle();
@@ -77,13 +73,12 @@ public class Base2DScreen implements Screen, InputProcessor {
     }
 
     private void createBackground() {
-        backgroundTextureRegion = textureAtlas.findRegion(BACKGROUND_NAME);
-        background = new Background( backgroundTextureRegion );
+        background = new Background( textureAtlas.findRegion(BACKGROUND_NAME) );
     }
 
     private void createStars() {
         int i = 0;
-        starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
+       TextureRegion[] starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
         for( String name : STAR_TEXTURE_NAMES ) {
             starTextureRegions[i++] = textureAtlas.findRegion(name);
         }
@@ -145,9 +140,9 @@ public class Base2DScreen implements Screen, InputProcessor {
         float worldWidth = worldHeight * aspect;
         worldBounds.resize(worldWidth, worldHeight);
 
-        Matrices.inplaceSetTransitionMatrix(worldToGl, worldBounds, glBounds);
+        Matrices.setTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
-        Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
+        Matrices.setTransitionMatrix(screenToWorld, screenBounds, worldBounds);
 
         background.resize(worldBounds);
         for(int i = 0; i < stars.length; ++i) {

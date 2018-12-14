@@ -15,7 +15,7 @@ public class Matrices {
      * @param from - initial rectangle.
      * @param to - target rectangle.
      */
-    public static void inplaceSetTransitionMatrix(Matrix4 matrix, Rectangle from, Rectangle to) {
+    public static void setTransitionMatrix(Matrix4 matrix, Rectangle from, Rectangle to) {
         float scaleX = to.getWidth() / from.getWidth();
         float scaleY = to.getHeight() / from.getHeight();
         final Vector2 toCenter = to.getCenter();
@@ -30,7 +30,7 @@ public class Matrices {
      * @param from - initial rectangle.
      * @param to - target rectangle.
      */
-    public static void inplaceSetTransitionMatrix(Matrix3 matrix, Rectangle from, Rectangle to) {
+    public static void setTransitionMatrix(Matrix3 matrix, Rectangle from, Rectangle to) {
         float scaleX = to.getWidth() / from.getWidth();
         float scaleY = to.getHeight() / from.getHeight();
         final Vector2 toCenter = to.getCenter();

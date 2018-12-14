@@ -16,7 +16,7 @@ import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
-import ru.geekbrains.utils.Regions;
+import ru.ryabtsev.game.utils.Regions;
 
 /**
  * Game main screen class.
@@ -26,23 +26,18 @@ public class GameScreen extends Base2DScreen {
     private static final float KEYBOARD_MOVEMENT_STEP = 0.05f * HEIGHT_AXIS_SCALE;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.01f;
 
-
     private TextureAtlas gameScreenTextures;
 
     private Texture spaceShipTexture;
 
     private BulletPool bulletPool;
 
-    private BulletType playerBulletType;
-    private SpaceShipType playerShipType;
     private SpaceShip playerShip;
 
-    private BulletType enemyBulletType;
     private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
     private EnemyShipPool enemyShips;
 
-
-    private float enemyRessurectionCounter = 0f;
+    private float enemyResurrectionCounter = 0f;
 
     public GameScreen(StarShooterGame game) {
         super(game, HEIGHT_AXIS_SCALE);
@@ -56,12 +51,12 @@ public class GameScreen extends Base2DScreen {
     private void initPlayer() {
         spaceShipTexture = new Texture( "textures/star_ship.png");
 
-        playerBulletType = new BulletType(
+        BulletType playerBulletType = new BulletType(
                 gameScreenTextures.findRegion("bulletMainShip"), 0.01f,
                 new Vector2(0, 0.5f), 1
         );
 
-        playerShipType = new SpaceShipType( loadPlayerShipTextures(),
+        SpaceShipType playerShipType = new SpaceShipType( loadPlayerShipTextures(),
                 playerBulletType, PLAYER_SPACE_SHIP_SPEED, "Simple player space ship"
         );
 
@@ -69,8 +64,8 @@ public class GameScreen extends Base2DScreen {
     }
 
     private void initEnemies() {
-        enemyBulletType = new BulletType( gameScreenTextures.findRegion("bulletEnemy"), 0.01f,
-                new Vector2(0, -0.5f), 1
+        BulletType enemyBulletType = new BulletType( gameScreenTextures.findRegion("bulletEnemy"),
+                0.01f, new Vector2(0, -0.5f), 1
         );
 
         for(int i = 0; i < enemyShipTypes.length; ++i) {
@@ -84,7 +79,6 @@ public class GameScreen extends Base2DScreen {
                     enemyBulletType, PLAYER_SPACE_SHIP_SPEED, "Enemy space ship"
             );
         }
-
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, worldBounds);
     }
 
@@ -126,14 +120,14 @@ public class GameScreen extends Base2DScreen {
     }
 
     private void placeNewEnemy(float delta) {
-        enemyRessurectionCounter += delta;
-        if( enemyRessurectionCounter > 240f * delta) {
+        enemyResurrectionCounter += delta;
+        if( enemyResurrectionCounter > 240f * delta) {
             EnemyShip ship = enemyShips.obtain();
             ship.resize(worldBounds);
             float x = MathUtils.random( worldBounds.getLeft() + ship.getWidth(), worldBounds.getRight() - ship.getWidth());
             ship.moveTo( new Vector2(x, worldBounds.getTop() + ship.getHeight()));
             ship.setDestination( new Vector2( x, worldBounds.getBottom() - 0.1f ) );
-            enemyRessurectionCounter = 0f;
+            enemyResurrectionCounter = 0f;
         }
     }
 

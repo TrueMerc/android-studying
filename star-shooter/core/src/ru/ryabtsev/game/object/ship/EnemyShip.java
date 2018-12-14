@@ -1,6 +1,5 @@
 package ru.ryabtsev.game.object.ship;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
@@ -12,7 +11,7 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
-    private static final float SHOOTING_RATE = 1f;
+    private static final float SHOOTING_RATE = 3f;
 
     private boolean isDestroyed;
     private boolean openFire;

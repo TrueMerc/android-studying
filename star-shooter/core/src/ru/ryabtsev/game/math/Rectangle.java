@@ -165,7 +165,7 @@ public class Rectangle {
     }
 
     /**
-     * Determenes if the rectangle is inside current rectangle or not.
+     * Determines if the rectangle is inside current rectangle or not.
      * @param rectangle - given rectangle.
      * @return true if the rectangle is inside current rectangle or false if it isn't.
      */
@@ -180,7 +180,7 @@ public class Rectangle {
      * Determines if the rectangle intersects current rectangle (both rectangles have common points).
      * @param rectangle - given rectangle.
      */
-    public boolean isIntercect(Rectangle rectangle) {
+    public boolean isIntersect(Rectangle rectangle) {
         return (this.getLeft() > rectangle.getRight() || this.getRight() < rectangle.getLeft()) ||
                (this.getTop() < rectangle.getBottom() || this.getBottom() > rectangle.getTop()) ? false : true;
     }
@@ -190,6 +190,6 @@ public class Rectangle {
      * @param rectangle - given rectangle.
      */
     public boolean isOutside(Rectangle rectangle) {
-        return !(isInside(rectangle) || isIntercect(rectangle));
+        return !(isInside(rectangle) || isIntersect(rectangle));
     }
 }

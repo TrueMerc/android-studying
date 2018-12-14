@@ -2,8 +2,6 @@ package ru.ryabtsev.game.object.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
@@ -79,7 +77,7 @@ public class SpaceShip extends Sprite {
 
     public void moveTo( final Vector2 position ) {
         stop();
-        if( worldBounds.isIntercect(this ) && !worldBounds.isInside(position) ) {
+        if( worldBounds.isIntersect(this ) && !worldBounds.isInside(position) ) {
             return;
         }
         handleBounds( position );
