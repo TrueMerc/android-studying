@@ -23,16 +23,14 @@ import ru.ryabtsev.game.object.Star;
  */
 public class Base2DScreen implements Screen, InputProcessor {
 
-
-
     private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
     private static final String BACKGROUND_NAME = "Space";
     private static final String[] STAR_TEXTURE_NAMES =  { "Star", "Star1" };
     private static final int STARS_COUNT = 50;
 
-    protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
-    protected Rectangle worldBounds;  // painting area bounds in game world coordinates
+    private Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
+    protected Rectangle worldBounds;  // painting area bounds in game world coordinates
 
     protected SpriteBatch batch;
 

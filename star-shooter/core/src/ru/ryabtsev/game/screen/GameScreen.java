@@ -28,8 +28,6 @@ public class GameScreen extends Base2DScreen {
 
     private TextureAtlas gameScreenTextures;
 
-    private Texture spaceShipTexture;
-
     private BulletPool bulletPool;
 
     private SpaceShip playerShip;
@@ -41,7 +39,7 @@ public class GameScreen extends Base2DScreen {
 
     public GameScreen(StarShooterGame game) {
         super(game);
-        gameScreenTextures = new TextureAtlas( "textures/mainAtlas.tpack") ;
+        gameScreenTextures = new TextureAtlas( "textures/GameScreen.pack") ;
 
         bulletPool = new BulletPool();
         initPlayer();
@@ -49,14 +47,16 @@ public class GameScreen extends Base2DScreen {
     }
 
     private void initPlayer() {
-        spaceShipTexture = new Texture( "textures/star_ship.png");
+
+        TextureRegion[] textureRegions = new TextureRegion[1];
+        textureRegions[0] = gameScreenTextures.findRegion("PlayerShip");
 
         BulletType playerBulletType = new BulletType(
-                gameScreenTextures.findRegion("bulletMainShip"), 0.01f,
+                gameScreenTextures.findRegion("BulletPlayer"), 0.01f,
                 new Vector2(0, 0.5f), 1
         );
 
-        SpaceShipType playerShipType = new SpaceShipType( loadPlayerShipTextures(),
+        SpaceShipType playerShipType = new SpaceShipType( textureRegions,
                 playerBulletType, PLAYER_SPACE_SHIP_SPEED, "Simple player space ship"
         );
 
@@ -64,12 +64,12 @@ public class GameScreen extends Base2DScreen {
     }
 
     private void initEnemies() {
-        BulletType enemyBulletType = new BulletType( gameScreenTextures.findRegion("bulletEnemy"),
-                0.01f, new Vector2(0, -0.5f), 1
-        );
-
         for(int i = 0; i < enemyShipTypes.length; ++i) {
-            StringBuffer stringBuffer = new StringBuffer("enemy" + i);
+            BulletType enemyBulletType = new BulletType( gameScreenTextures.findRegion("BulletEnemy"),
+                    0.01f * (i + 1), new Vector2(0, -0.3f / (i + 1)), 1 * (i + 1)
+            );
+
+            StringBuffer stringBuffer = new StringBuffer("EnemyShip" + i);
 
             TextureRegion[] textureRegions;
             TextureRegion region = gameScreenTextures.findRegion(stringBuffer.toString());
@@ -82,11 +82,7 @@ public class GameScreen extends Base2DScreen {
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, worldBounds);
     }
 
-    private TextureRegion[] loadPlayerShipTextures() {
-        TextureRegion[] playerShipTextures = new TextureRegion[1];
-        playerShipTextures[0] = new TextureRegion( spaceShipTexture );
-        return playerShipTextures;
-    }
+
 
     @Override
     public void show() {
@@ -143,7 +139,6 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public void dispose() {
-        spaceShipTexture.dispose();
         gameScreenTextures.dispose();
         super.dispose();
     }
