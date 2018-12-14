@@ -11,11 +11,14 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.List;
 
 import ru.ryabtsev.game.StarShooterGame;
+import ru.ryabtsev.game.object.Destroyable;
 import ru.ryabtsev.game.object.Sprite;
 import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
+import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.NewGameButton;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 import ru.ryabtsev.game.object.ship.EnemyShip;
 import ru.ryabtsev.game.object.ship.EnemyShipPool;
@@ -45,6 +48,7 @@ public class GameScreen extends Base2DScreen {
     private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
     private EnemyShipPool enemyShips;
 
+    private MenuButton newGameButton;
     private Sprite gameOverMessage;
 
     private float enemyResurrectionCounter = 0f;
@@ -61,11 +65,15 @@ public class GameScreen extends Base2DScreen {
     private void initResources() {
         gameScreenTextures = new TextureAtlas( "textures/GameScreen.pack") ;
 
-        TextureRegion gameOverRegion = gameScreenTextures.findRegion("MessageGameOver");
-        gameOverMessage = new Sprite(gameOverRegion);
+        gameOverMessage = new Sprite(gameScreenTextures.findRegion("MessageGameOver"));
         gameOverMessage.setHeight(0.1f);
 
-
+        newGameButton = new NewGameButton(
+                gameScreenTextures.findRegion("ButtonNewGame"),
+                new Vector2(0, -0.2f),
+                game
+        );
+        newGameButton.setHeight(0.05f);
 
         bulletPool = new BulletPool();
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
@@ -139,11 +147,17 @@ public class GameScreen extends Base2DScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
-        playerShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
-        enemyShips.updateActiveSprites(delta);
-        explosionPool.updateActiveSprites(delta);
-        placeNewEnemy( delta );
+        if( game.getState() == StarShooterGame.State.NEW) {
+            playerShip.alive();
+            game.setState(StarShooterGame.State.PLAYING);
+        }
+        if( game.getState() == StarShooterGame.State.PLAYING) {
+            playerShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyShips.updateActiveSprites(delta);
+            explosionPool.updateActiveSprites(delta);
+            placeNewEnemy(delta);
+        }
     }
 
     private void checkCollisions() {
@@ -154,8 +168,9 @@ public class GameScreen extends Base2DScreen {
             }
             float minDist = enemy.getWidth() / 2 + playerShip.getWidth() / 2;
             if (enemy.getCenter().dst2(playerShip.getCenter()) < minDist * minDist) {
-                enemy.damage(enemy.getHitPoints());
-                playerShip.damage(2 * enemy.getHitPoints());
+                int enemyHitPoints = enemy.getHitPoints();
+                enemy.damage(2 * playerShip.getHitPoints());
+                playerShip.damage(2 * enemyHitPoints);
                 return;
             }
         }
@@ -186,7 +201,21 @@ public class GameScreen extends Base2DScreen {
             }
         }
         if( playerShip.isDestroyed() ) {
-            game.setState(StarShooterGame.State.OVER);
+            gameOver();
+        }
+    }
+
+    private void gameOver() {
+        game.setState(StarShooterGame.State.OVER);
+        playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + playerShip.getHeight()));
+        destroyList(enemyShips.getActiveObjects());
+        destroyList(bulletPool.getActiveObjects());
+        destroyList(explosionPool.getActiveObjects());
+    }
+
+    private <T extends Destroyable> void  destroyList(List<T> list) {
+        for( T element : list) {
+            element.destroy();
         }
     }
 
@@ -212,14 +241,16 @@ public class GameScreen extends Base2DScreen {
     public void draw() {
         super.draw();
         batch.begin();
+        bulletPool.drawActiveSprites(batch);
+        enemyShips.drawActiveSprites(batch);
+
         if (game.getState() != StarShooterGame.State.OVER) {
             playerShip.draw(batch);
-            bulletPool.drawActiveSprites(batch);
-            enemyShips.drawActiveSprites(batch);
             explosionPool.drawActiveSprites(batch);
         }
         else {
             gameOverMessage.draw(batch);
+            newGameButton.draw(batch);
         }
         batch.end();
     }
@@ -264,7 +295,7 @@ public class GameScreen extends Base2DScreen {
             }
         }
 
-        if( keycode == Input.Keys.M) {
+        if(keycode == Input.Keys.M) {
             game.setScreen(StarShooterGame.ScreenType.MENU);
             return true;
         }
@@ -277,8 +308,22 @@ public class GameScreen extends Base2DScreen {
     }
 
     @Override
+    public boolean mouseMoved(Vector2 position) {
+        if( game.getState() == StarShooterGame.State.OVER) {
+            newGameButton.onSelect(position);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
-        playerShip.setDestination(position);
+        if( !playerShip.isDestroyed() ) {
+            playerShip.setDestination(position);
+        }
+        if( game.getState() == StarShooterGame.State.OVER) {
+            newGameButton.onTouchDown(position);
+        }
         return true;
     }
 
