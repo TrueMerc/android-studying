@@ -1,28 +1,26 @@
 package ru.ryabtsev.game.object.ship;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.math.Rectangle;
 import ru.ryabtsev.game.object.Destroyable;
+import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
+import ru.ryabtsev.game.object.explosion.ExplosionPool;
 
 /**
  * Enemy ships base class.
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
-    private static final float SHOOTING_RATE = 1f;
-
-    private boolean isDestroyed;
     private boolean openFire;
     private float fireCounter;
 
     /**
      * {@inheritDoc}
      */
-    public EnemyShip(SpaceShipType type, BulletPool bulletPool, Rectangle worldBounds) {
-        super(type, bulletPool, worldBounds);
+    public EnemyShip(SpaceShipType type, BulletPool bulletPool, ExplosionPool explosionPool, Rectangle worldBounds) {
+        super(type, bulletPool, explosionPool, worldBounds);
         velocity.set( 0, 0);
         openFire = false;
         fireCounter = 0;
@@ -32,7 +30,7 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     @Override
     public void update( float delta ) {
         super.update( delta );
-        if( openFire && fireCounter > SHOOTING_RATE) {
+        if( openFire && fireCounter > spaceShipType.getWeapon().getReloadingTime()) {
             this.fire();
             fireCounter = 0f;
         }
@@ -58,35 +56,24 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     public void setDestination(final Vector2 position) {
         stop();
         destination.set( position );
-        velocity.set( destination.cpy().sub(center) ).setLength( VELOCITY_SCALE );
+        velocity.set( destination.cpy().sub(center) ).setLength( spaceShipType.getSpeed() );
 
-        System.out.println("Current coordinates: " + center );
-        System.out.println("Destination coordinates: " + destination );
-        System.out.println("Velocity = " + velocity);
+//        System.out.println("Current coordinates: " + center );
+//        System.out.println("Destination coordinates: " + destination );
+//        System.out.println("Velocity = " + velocity);
     }
 
     /**
-     * @return true if the object destroyed and false if it isn't destroyed.
+     * Returns true if bullet hits player space ship or false if it isn't.
+     * @param bullet bullet.
+     * @return true if bullet hits player space ship or false if it isn't.
      */
     @Override
-    public boolean isDestroyed() {
-        return isDestroyed;
-    }
-
-    /**
-     * Destroys the object.
-     */
-    @Override
-    public void destroy() {
-        isDestroyed = true;
-        openFire = false;
-    }
-
-    /**
-     * Makes object alive.
-     */
-    @Override
-    public void alive() {
-        isDestroyed = false;
+    public boolean isHit(Bullet bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < getCenter().y
+        );
     }
 }

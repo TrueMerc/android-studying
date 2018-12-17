@@ -1,4 +1,4 @@
-package ru.geekbrains.utils;
+package ru.ryabtsev.game.utils;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

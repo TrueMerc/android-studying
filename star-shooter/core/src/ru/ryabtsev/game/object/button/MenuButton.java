@@ -21,7 +21,7 @@ abstract public class MenuButton extends Sprite {
      * @param region - sprite object texture.
      * @param position - position on the screen.
      */
-    public MenuButton(final TextureRegion region, final Vector2 position) {
+    MenuButton(final TextureRegion region, final Vector2 position) {
         super(region);
         setHeight(DEFAULT_HEIGHT);
         center.set(position);

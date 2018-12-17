@@ -1,6 +1,5 @@
 package ru.ryabtsev.game.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -24,25 +23,18 @@ import ru.ryabtsev.game.object.Star;
  */
 public class Base2DScreen implements Screen, InputProcessor {
 
-    private static float GL_DEFAULT_WIDTH = 2f;
-    private static float GL_DEFAULT_HEIGHT = 2f;
-
-    protected static final float HEIGHT_AXIS_SCALE = 1f;
-
     private static final String TEXTURE_ATLAS_PATH = "textures/BaseScreen.pack";
     private static final String BACKGROUND_NAME = "Space";
     private static final String[] STAR_TEXTURE_NAMES =  { "Star", "Star1" };
     private static final int STARS_COUNT = 50;
 
-    protected Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
-    protected Rectangle worldBounds;  // painting area bounds in game world coordinates
+    private Rectangle screenBounds; // painting area bounds in pixels (screen bounds)
     private Rectangle glBounds;     // painting area bounds in OpenGL coordinates
+    protected Rectangle worldBounds;  // painting area bounds in game world coordinates
 
     protected SpriteBatch batch;
 
     private TextureAtlas textureAtlas;
-    private TextureRegion backgroundTextureRegion;
-    private TextureRegion[] starTextureRegions;
 
     private Background background;
     private Star[] stars;
@@ -60,14 +52,17 @@ public class Base2DScreen implements Screen, InputProcessor {
     /**
      * Constructor.
      */
-    Base2DScreen(StarShooterGame game, float worldHeight) {
+    Base2DScreen(StarShooterGame game) {
+        final float GL_DEFAULT_WIDTH = 2f;
+        final float GL_DEFAULT_HEIGHT = 2f;
+        final float HEIGHT_AXIS_SCALE = 1f;
         this.game  = game;
         screenBounds = new Rectangle();
         worldBounds = new Rectangle();
         glBounds = new Rectangle(0, 0, GL_DEFAULT_WIDTH, GL_DEFAULT_HEIGHT);
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
-        this.worldHeight = worldHeight;
+        this.worldHeight = HEIGHT_AXIS_SCALE;
         this.touch = new Vector2();
         this.mousePosition = new Vector2();
 
@@ -77,13 +72,12 @@ public class Base2DScreen implements Screen, InputProcessor {
     }
 
     private void createBackground() {
-        backgroundTextureRegion = textureAtlas.findRegion(BACKGROUND_NAME);
-        background = new Background( backgroundTextureRegion );
+        background = new Background( textureAtlas.findRegion(BACKGROUND_NAME) );
     }
 
     private void createStars() {
         int i = 0;
-        starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
+       TextureRegion[] starTextureRegions = new TextureRegion[STAR_TEXTURE_NAMES.length];
         for( String name : STAR_TEXTURE_NAMES ) {
             starTextureRegions[i++] = textureAtlas.findRegion(name);
         }
@@ -145,9 +139,9 @@ public class Base2DScreen implements Screen, InputProcessor {
         float worldWidth = worldHeight * aspect;
         worldBounds.resize(worldWidth, worldHeight);
 
-        Matrices.inplaceSetTransitionMatrix(worldToGl, worldBounds, glBounds);
+        Matrices.setTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
-        Matrices.inplaceSetTransitionMatrix(screenToWorld, screenBounds, worldBounds);
+        Matrices.setTransitionMatrix(screenToWorld, screenBounds, worldBounds);
 
         background.resize(worldBounds);
         for(int i = 0; i < stars.length; ++i) {
@@ -183,7 +177,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        System.out.println( "keyUp key code = " + keycode);
+        //System.out.println( "keyUp key code = " + keycode);
         return false;
     }
 
@@ -194,8 +188,8 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
-        System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
+        //System.out.println("Screen bounds: width = " + screenBounds.getWidth() + ", y = " + screenBounds.getHeight() );
+        //System.out.println("Screen coordinates: x = " + screenX + ", y = " + screenY );
         touch.set( screenX, screenBounds.getHeight() - screenY).mul( screenToWorld );
         return touchDown( touch, pointer, button);
     }
@@ -227,9 +221,9 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        System.out.println( "Touch dragged: (" + screenX + ", "  + screenY + ")" );
+        //System.out.println( "Touch dragged: (" + screenX + ", "  + screenY + ")" );
         touch.set( screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
-        System.out.println( "Touch dragged: " + touch );
+        //System.out.println( "Touch dragged: " + touch );
         return touchDragged( touch, pointer);
     }
 
