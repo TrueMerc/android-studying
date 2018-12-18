@@ -29,6 +29,7 @@ import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
+import ru.ryabtsev.game.utils.Collisions;
 import ru.ryabtsev.game.utils.Regions;
 
 /**
@@ -161,7 +162,7 @@ public class GameScreen extends Base2DScreen {
         super.render(delta);
         if( game.getState() == StarShooterGame.State.PLAYING) {
             update(delta);
-            checkCollisions();
+            processCollisions();
             deleteAllDestroyed();
         }
         draw();
@@ -183,46 +184,8 @@ public class GameScreen extends Base2DScreen {
         }
     }
 
-    private void checkCollisions() {
-        List<EnemyShip> enemyList = enemyShips.getActiveObjects();
-        for (EnemyShip enemy : enemyList) {
-            if (enemy.isDestroyed()) {
-                continue;
-            }
-            float minDist = enemy.getWidth() / 2 + playerShip.getWidth() / 2;
-            if (enemy.getCenter().dst2(playerShip.getCenter()) < minDist * minDist) {
-                int enemyHitPoints = enemy.getHitPoints();
-                enemy.damage(2 * playerShip.getHitPoints());
-                playerShip.damage(2 * enemyHitPoints);
-                return;
-            }
-        }
-
-        List<Bullet> bulletList = bulletPool.getActiveObjects();
-        for (EnemyShip enemy : enemyList) {
-            if (enemy.isDestroyed()) {
-                continue;
-            }
-            for (Bullet bullet : bulletList) {
-                if (bullet.getOwner() != playerShip || bullet.isDestroyed()) {
-                    continue;
-                }
-                if (enemy.isHit(bullet)) {
-                    enemy.damage(bullet.getDamage());
-                    bullet.destroy();
-                }
-            }
-        }
-
-        for (Bullet bullet : bulletList) {
-            if (bullet.isDestroyed() || bullet.getOwner() == playerShip) {
-                continue;
-            }
-            if (playerShip.isHit(bullet)) {
-                bullet.destroy();
-                playerShip.damage(bullet.getDamage());
-            }
-        }
+    private void processCollisions() {
+        Collisions.process( playerShip, enemyShips, bulletPool );
         if( playerShip.isDestroyed() ) {
             gameOver();
         }
@@ -236,7 +199,7 @@ public class GameScreen extends Base2DScreen {
         destroyList(explosionPool.getActiveObjects());
     }
 
-    private <T extends Destroyable> void  destroyList(List<T> list) {
+    private <T extends Destroyable> void destroyList(List<T> list) {
         for( T element : list) {
             element.destroy();
         }
@@ -319,11 +282,11 @@ public class GameScreen extends Base2DScreen {
                     return true;
                 case Input.Keys.LEFT:
                 case Input.Keys.A:
-                    moveShipLeft();
+                    moveLeftButton.onTouchDown(moveLeftButton.getCenter());
                     return true;
                 case Input.Keys.RIGHT:
                 case Input.Keys.D:
-                    moveRight();
+                    moveRightButton.onTouchDown(moveRightButton.getCenter());
                     return true;
                 case Input.Keys.UP:
                 case Input.Keys.W:
