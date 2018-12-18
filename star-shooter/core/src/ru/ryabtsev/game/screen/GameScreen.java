@@ -37,7 +37,7 @@ import ru.ryabtsev.game.utils.Regions;
  */
 public class GameScreen extends Base2DScreen {
 
-    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f;
+    private static final float KEYBOARD_MOVEMENT_STEP = 0.5f;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.001f;
 
     private TextureAtlas gameScreenTextures;
@@ -119,7 +119,7 @@ public class GameScreen extends Base2DScreen {
         Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
 
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                weapon, 0.2f, PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
+                weapon, 0.2f, 2* PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, explosionPool, worldBounds);
@@ -278,7 +278,7 @@ public class GameScreen extends Base2DScreen {
             switch(keycode) {
                 case Input.Keys.DOWN:
                 case Input.Keys.S:
-                    playerShip.setDestination(playerShip.getCenter().sub(0, KEYBOARD_MOVEMENT_STEP));
+                    playerShip.setDestination(playerShip.getCenter().cpy().sub(0, KEYBOARD_MOVEMENT_STEP));
                     return true;
                 case Input.Keys.LEFT:
                 case Input.Keys.A:
@@ -290,7 +290,7 @@ public class GameScreen extends Base2DScreen {
                     return true;
                 case Input.Keys.UP:
                 case Input.Keys.W:
-                    playerShip.setDestination(playerShip.getCenter().add(0, KEYBOARD_MOVEMENT_STEP));
+                    playerShip.setDestination(playerShip.getCenter().cpy().add(0, KEYBOARD_MOVEMENT_STEP));
                     return true;
                 case Input.Keys.SPACE:
                     fireButton.onTouchDown(fireButton.getCenter());
@@ -310,14 +310,14 @@ public class GameScreen extends Base2DScreen {
      * @return
      */
     public void moveShipLeft() {
-        playerShip.setDestination(playerShip.getCenter().sub(KEYBOARD_MOVEMENT_STEP, 0));
+        playerShip.setDestination(playerShip.getCenter().cpy().sub(KEYBOARD_MOVEMENT_STEP, 0));
     }
 
     /**
      * Moves player's ship right.
      */
     public void moveRight() {
-        playerShip.setDestination(playerShip.getCenter().add(KEYBOARD_MOVEMENT_STEP, 0));
+        playerShip.setDestination(playerShip.getCenter().cpy().add(KEYBOARD_MOVEMENT_STEP, 0));
     }
 
     @Override
