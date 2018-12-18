@@ -61,11 +61,10 @@ abstract public class Button extends Sprite {
 
     /**
      * Performs an action when 'touch' event occurs.
-     * @param touchPosition
-     * @return
+     * @param touchPosition touch position.
+     * @return true if button is touched down and false if it isn't.
      */
     abstract public boolean onTouchDown(final Vector2 touchPosition);
-
 
     /**
      * Performs an action when 'selection' even occurs.

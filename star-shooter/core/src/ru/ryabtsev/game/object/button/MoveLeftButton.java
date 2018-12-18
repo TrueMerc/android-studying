@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import ru.ryabtsev.game.screen.GameScreen;
 
 /**
- * Game screen button which controls player space ship fire.
+ * Button which moves players ship left.
  */
-public class FireButton extends Button {
+public class MoveLeftButton extends Button {
 
     private GameScreen gameScreen;
 
@@ -18,22 +18,24 @@ public class FireButton extends Button {
      * @param position position of button center on the screen.
      * @param gameScreen game screen.
      */
-    public FireButton(final TextureRegion region, final Vector2 position, final GameScreen gameScreen) {
+    public MoveLeftButton(final TextureRegion region, final Vector2 position, final GameScreen gameScreen) {
         super(region, position);
         this.gameScreen = gameScreen;
     }
 
     /**
-     * Performs player ship fire.
+     * Moves player ship left when touched.
      * @param touchPosition touch position.
      * @return
      */
     @Override
     public boolean onTouchDown(Vector2 touchPosition) {
-        if(isInside(touchPosition)) {
-            gameScreen.getPlayerShip().fire();
+        if( isInside(touchPosition)) {
+            gameScreen.moveShipLeft();
             return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 }

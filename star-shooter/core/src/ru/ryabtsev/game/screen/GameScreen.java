@@ -19,6 +19,8 @@ import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
 import ru.ryabtsev.game.object.button.Button;
 import ru.ryabtsev.game.object.button.FireButton;
+import ru.ryabtsev.game.object.button.MoveLeftButton;
+import ru.ryabtsev.game.object.button.MoveRightButton;
 import ru.ryabtsev.game.object.button.NewGameButton;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 import ru.ryabtsev.game.object.ship.EnemyShip;
@@ -50,6 +52,8 @@ public class GameScreen extends Base2DScreen {
     private EnemyShipPool enemyShips;
 
     private Button fireButton;
+    private Button moveLeftButton;
+    private Button moveRightButton;
     private Button newGameButton;
     private Sprite gameOverMessage;
 
@@ -83,6 +87,20 @@ public class GameScreen extends Base2DScreen {
                 this
         );
         fireButton.setHeight(0.15f);
+
+        moveLeftButton = new MoveLeftButton(
+                gameScreenTextures.findRegion("Triangle"),
+                new Vector2( -0.4f, -0.4f),
+                this
+        );
+        moveLeftButton.rotate(270f);
+
+        moveRightButton = new MoveRightButton(
+                gameScreenTextures.findRegion("Triangle"),
+                new Vector2( -0.4f, -0.4f),
+                this
+        );
+        moveRightButton.rotate(90f);
 
         bulletPool = new BulletPool();
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
@@ -254,6 +272,8 @@ public class GameScreen extends Base2DScreen {
             bulletPool.drawActiveSprites(batch);
             enemyShips.drawActiveSprites(batch);
             fireButton.draw(batch);
+            moveLeftButton.draw(batch);
+            moveRightButton.draw(batch);
             playerShip.draw(batch);
             explosionPool.drawActiveSprites(batch);
         }
@@ -275,7 +295,21 @@ public class GameScreen extends Base2DScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
         playerShip.resize(worldBounds);
+
+        fireButton.resize(worldBounds);
+        fireButton.setLeft(worldBounds.getRight() - fireButton.getWidth());
+        fireButton.setBottom(worldBounds.getBottom());
+
+        moveLeftButton.resize(worldBounds);
+        moveLeftButton.setLeft(worldBounds.getLeft());
+        moveLeftButton.setBottom(worldBounds.getBottom());
+
+        moveRightButton.resize(worldBounds);
+        moveRightButton.setLeft(moveLeftButton.getRight() + 0.01f);
+        moveRightButton.setBottom(worldBounds.getBottom());
+
         gameOverMessage.resize(worldBounds);
+        newGameButton.resize(worldBounds);
     }
 
     @Override
@@ -285,21 +319,21 @@ public class GameScreen extends Base2DScreen {
                 case Input.Keys.DOWN:
                 case Input.Keys.S:
                     playerShip.setDestination(playerShip.getCenter().sub(0, KEYBOARD_MOVEMENT_STEP));
-                    break;
+                    return true;
                 case Input.Keys.LEFT:
                 case Input.Keys.A:
-                    playerShip.setDestination(playerShip.getCenter().sub(KEYBOARD_MOVEMENT_STEP, 0));
-                    break;
+                    moveShipLeft();
+                    return true;
                 case Input.Keys.RIGHT:
                 case Input.Keys.D:
-                    playerShip.setDestination(playerShip.getCenter().add(KEYBOARD_MOVEMENT_STEP, 0));
-                    break;
+                    moveRight();
+                    return true;
                 case Input.Keys.UP:
                 case Input.Keys.W:
                     playerShip.setDestination(playerShip.getCenter().add(0, KEYBOARD_MOVEMENT_STEP));
-                    break;
+                    return true;
                 case Input.Keys.SPACE:
-                    playerShip.fire();
+                    fireButton.onTouchDown(fireButton.getCenter());
                     return true;
             }
         }
@@ -311,6 +345,21 @@ public class GameScreen extends Base2DScreen {
         return false;
     }
 
+    /**
+     * Moves player's ship left.
+     * @return
+     */
+    public void moveShipLeft() {
+        playerShip.setDestination(playerShip.getCenter().sub(KEYBOARD_MOVEMENT_STEP, 0));
+    }
+
+    /**
+     * Moves player's ship right.
+     */
+    public void moveRight() {
+        playerShip.setDestination(playerShip.getCenter().add(KEYBOARD_MOVEMENT_STEP, 0));
+    }
+
     @Override
     public boolean keyUp(int keycode) {
         return super.keyUp(keycode);
@@ -318,23 +367,23 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean mouseMoved(Vector2 position) {
-        if( game.getState() == StarShooterGame.State.OVER) {
+        if(game.getState() == StarShooterGame.State.OVER) {
             newGameButton.onSelect(position);
         }
-
         return true;
     }
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
         if( !playerShip.isDestroyed() ) {
-            //playerShip.setDestination(position);
-            fireButton.onTouchDown(position);
+            return (fireButton.onTouchDown(position) ||
+                    moveLeftButton.onTouchDown(position) ||
+                    moveRightButton.onTouchDown(position));
         }
         if( game.getState() == StarShooterGame.State.OVER) {
-            newGameButton.onTouchDown(position);
+            return newGameButton.onTouchDown(position);
         }
-        return true;
+        return false;
     }
 
     @Override
