@@ -76,28 +76,24 @@ public class GameScreen extends Base2DScreen {
 
         newGameButton = new NewGameButton(
                 gameScreenTextures.findRegion("ButtonNewGame"),
-                new Vector2(0, -0.2f),
                 game
         );
         newGameButton.setHeight(0.05f);
 
         fireButton = new FireButton(
                 gameScreenTextures.findRegion("ButtonFire"),
-                new Vector2(  0.4f, -0.4f),
                 this
         );
         fireButton.setHeight(0.15f);
 
         moveLeftButton = new MoveLeftButton(
                 gameScreenTextures.findRegion("Triangle"),
-                new Vector2( -0.4f, -0.4f),
                 this
         );
         moveLeftButton.rotate(270f);
 
         moveRightButton = new MoveRightButton(
                 gameScreenTextures.findRegion("Triangle"),
-                new Vector2( -0.4f, -0.4f),
                 this
         );
         moveRightButton.rotate(90f);
@@ -310,6 +306,7 @@ public class GameScreen extends Base2DScreen {
 
         gameOverMessage.resize(worldBounds);
         newGameButton.resize(worldBounds);
+        newGameButton.setPosition( new Vector2(0f, -0.2f) );
     }
 
     @Override

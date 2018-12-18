@@ -15,11 +15,10 @@ public class PlayButton extends Button {
     /**
      * Constructor.
      * @param region sprite object texture.
-     * @param position position on the screen.
      * @param game game.
      */
-    public PlayButton(TextureRegion region, Vector2 position, StarShooterGame game) {
-        super(region, position);
+    public PlayButton(TextureRegion region, StarShooterGame game) {
+        super(region);
         this.game = game;
     }
 

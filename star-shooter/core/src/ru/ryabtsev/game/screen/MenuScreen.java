@@ -27,11 +27,10 @@ public class MenuScreen extends Base2DScreen {
         textureAtlas = new TextureAtlas("textures/MenuScreen.pack");
         playButton = new PlayButton(
                 textureAtlas.findRegion("ButtonPlay"),
-                new Vector2( -0.25f * worldBounds.getWidth(), 0), game
+                game
         );
         exitButton = new ExitButton(
-                textureAtlas.findRegion("ButtonExit"),
-                new Vector2( 0.25f * worldBounds.getWidth(), 0)
+                textureAtlas.findRegion("ButtonExit")
         );
     }
 

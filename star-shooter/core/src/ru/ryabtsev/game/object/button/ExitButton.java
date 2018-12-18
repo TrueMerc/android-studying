@@ -11,10 +11,9 @@ public class ExitButton extends Button {
     /**
      * Constructor.
      * @param region   - sprite object texture.
-     * @param position - position on the screen.
      */
-    public ExitButton(TextureRegion region, Vector2 position) {
-        super(region, position);
+    public ExitButton(TextureRegion region) {
+        super(region);
     }
 
     @Override

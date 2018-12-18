@@ -19,12 +19,10 @@ abstract public class Button extends Sprite {
     /**
      * Constructor.
      * @param region - sprite object texture.
-     * @param position - position on the screen.
      */
-    Button(final TextureRegion region, final Vector2 position) {
+    Button(final TextureRegion region) {
         super(region);
         setHeight(DEFAULT_HEIGHT);
-        center.set(position);
     }
 
     /**

@@ -14,19 +14,18 @@ public class MoveRightButton extends Button {
 
     /**
      * Constructor.
-     * @param region texture region correspoinding button image.
-     * @param position position of button center on the screen.
+     * @param region texture region corresponding button image.
      * @param gameScreen game screen.
      */
-    public MoveRightButton(final TextureRegion region, final Vector2 position, final GameScreen gameScreen) {
-        super(region, position);
+    public MoveRightButton(final TextureRegion region, final GameScreen gameScreen) {
+        super(region);
         this.gameScreen = gameScreen;
     }
 
     /**
      * Moves player ship left when touched.
      * @param touchPosition touch position.
-     * @return
+     * @return true if button is touched or false if it isn't.
      */
     @Override
     public boolean onTouchDown(Vector2 touchPosition) {

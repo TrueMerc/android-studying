@@ -15,11 +15,10 @@ public class FireButton extends Button {
     /**
      * Constructor.
      * @param region texture region correspoinding button image.
-     * @param position position of button center on the screen.
      * @param gameScreen game screen.
      */
-    public FireButton(final TextureRegion region, final Vector2 position, final GameScreen gameScreen) {
-        super(region, position);
+    public FireButton(final TextureRegion region, final GameScreen gameScreen) {
+        super(region);
         this.gameScreen = gameScreen;
     }
 

@@ -14,12 +14,11 @@ public class MoveLeftButton extends Button {
 
     /**
      * Constructor.
-     * @param region texture region correspoinding button image.
-     * @param position position of button center on the screen.
+     * @param region texture region corresponding button image.
      * @param gameScreen game screen.
      */
-    public MoveLeftButton(final TextureRegion region, final Vector2 position, final GameScreen gameScreen) {
-        super(region, position);
+    public MoveLeftButton(final TextureRegion region, final GameScreen gameScreen) {
+        super(region);
         this.gameScreen = gameScreen;
     }
 
