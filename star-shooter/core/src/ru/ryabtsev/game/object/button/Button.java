@@ -10,7 +10,7 @@ import ru.ryabtsev.game.object.Sprite;
 /**
  * Game menu buttons class.
  */
-abstract public class MenuButton extends Sprite {
+abstract public class Button extends Sprite {
 
     private static final float DEFAULT_HEIGHT = 0.15f;
 
@@ -21,7 +21,7 @@ abstract public class MenuButton extends Sprite {
      * @param region - sprite object texture.
      * @param position - position on the screen.
      */
-    MenuButton(final TextureRegion region, final Vector2 position) {
+    Button(final TextureRegion region, final Vector2 position) {
         super(region);
         setHeight(DEFAULT_HEIGHT);
         center.set(position);

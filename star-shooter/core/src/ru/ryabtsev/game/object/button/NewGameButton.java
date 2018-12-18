@@ -8,7 +8,7 @@ import ru.ryabtsev.game.StarShooterGame;
 /**
  * Starts new game after old game is over.
  */
-public class NewGameButton extends MenuButton {
+public class NewGameButton extends Button {
 
     private StarShooterGame game;
 

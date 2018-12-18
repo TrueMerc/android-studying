@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Exit button.
  */
-public class ExitButton extends MenuButton {
+public class ExitButton extends Button {
     /**
      * Constructor.
      * @param region   - sprite object texture.

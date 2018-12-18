@@ -17,7 +17,8 @@ import ru.ryabtsev.game.object.Weapon;
 import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
-import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.Button;
+import ru.ryabtsev.game.object.button.FireButton;
 import ru.ryabtsev.game.object.button.NewGameButton;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 import ru.ryabtsev.game.object.ship.EnemyShip;
@@ -48,7 +49,8 @@ public class GameScreen extends Base2DScreen {
     private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
     private EnemyShipPool enemyShips;
 
-    private MenuButton newGameButton;
+    private Button fireButton;
+    private Button newGameButton;
     private Sprite gameOverMessage;
 
     private float enemyResurrectionCounter = 0f;
@@ -75,6 +77,13 @@ public class GameScreen extends Base2DScreen {
         );
         newGameButton.setHeight(0.05f);
 
+        fireButton = new FireButton(
+                gameScreenTextures.findRegion("ButtonFire"),
+                new Vector2(  0.4f, -0.4f),
+                this
+        );
+        fireButton.setHeight(0.15f);
+
         bulletPool = new BulletPool();
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
 
@@ -95,7 +104,7 @@ public class GameScreen extends Base2DScreen {
         Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
 
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
+                weapon, 0.2f, PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, explosionPool, worldBounds);
@@ -116,7 +125,7 @@ public class GameScreen extends Base2DScreen {
             textureRegions = Regions.split( region, 1, 2, 2);
 
             enemyShipTypes[i] = new SpaceShipType( textureRegions,
-                    weapon, 0.1f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 10 * (i + 1), "Enemy space ship"
+                    weapon, 0.15f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 10 * (i + 1), "Enemy space ship"
             );
         }
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, explosionPool, worldBounds);
@@ -126,7 +135,7 @@ public class GameScreen extends Base2DScreen {
     public void show() {
        super.show();
        if( game.getState() == StarShooterGame.State.NEW) {
-           playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + playerShip.getHeight()));
+           playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + 2 * playerShip.getHeight()));
        }
        if( game.getState() != StarShooterGame.State.OVER ) {
            game.setState(StarShooterGame.State.PLAYING);
@@ -241,10 +250,10 @@ public class GameScreen extends Base2DScreen {
     public void draw() {
         super.draw();
         batch.begin();
-        bulletPool.drawActiveSprites(batch);
-        enemyShips.drawActiveSprites(batch);
-
         if (game.getState() != StarShooterGame.State.OVER) {
+            bulletPool.drawActiveSprites(batch);
+            enemyShips.drawActiveSprites(batch);
+            fireButton.draw(batch);
             playerShip.draw(batch);
             explosionPool.drawActiveSprites(batch);
         }
@@ -319,7 +328,8 @@ public class GameScreen extends Base2DScreen {
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
         if( !playerShip.isDestroyed() ) {
-            playerShip.setDestination(position);
+            //playerShip.setDestination(position);
+            fireButton.onTouchDown(position);
         }
         if( game.getState() == StarShooterGame.State.OVER) {
             newGameButton.onTouchDown(position);
@@ -334,5 +344,13 @@ public class GameScreen extends Base2DScreen {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns player space ship.
+     * @return player space ship.
+     */
+    public SpaceShip getPlayerShip() {
+        return playerShip;
     }
 }

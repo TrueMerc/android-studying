@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.button.ExitButton;
-import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.Button;
 import ru.ryabtsev.game.object.button.PlayButton;
 
 /**
@@ -15,8 +15,8 @@ public class MenuScreen extends Base2DScreen {
 
     private TextureAtlas textureAtlas;
 
-    private MenuButton playButton;
-    private MenuButton exitButton;
+    private Button playButton;
+    private Button exitButton;
 
     /**
      * Constructor
