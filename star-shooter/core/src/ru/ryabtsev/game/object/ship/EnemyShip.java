@@ -13,37 +13,52 @@ import ru.ryabtsev.game.object.explosion.ExplosionPool;
  */
 public class EnemyShip extends SpaceShip implements Destroyable {
 
-    private boolean openFire;
-    private float fireCounter;
+    private static final float FAR_SPACE_SPEED = 0.25f;
+
+    private boolean isInsideTheWorld;
+    private float fireTimer;
 
     /**
      * {@inheritDoc}
      */
     public EnemyShip(SpaceShipType type, BulletPool bulletPool, ExplosionPool explosionPool, Rectangle worldBounds) {
         super(type, bulletPool, explosionPool, worldBounds);
-        velocity.set( 0, 0);
-        openFire = false;
-        fireCounter = 0;
+        isInsideTheWorld = false;
+        fireTimer = 0;
     }
-
 
     @Override
     public void update( float delta ) {
         super.update( delta );
-        if( openFire && fireCounter > spaceShipType.getWeapon().getReloadingTime()) {
-            this.fire();
-            fireCounter = 0f;
+        if( isInsideTheWorld ) {
+            if( fireTimer > spaceShipType.getWeapon().getReloadingTime() ) {
+                this.fire();
+                fireTimer = 0f;
+            }
+            else {
+                fireTimer += delta;
+            }
         }
         else {
-            if( worldBounds.isInside(this) ) {
-                openFire = true;
+            if( worldBounds.isIntersect( this)) {
+                velocity.set( destination.cpy().sub(center) ).setLength( spaceShipType.getSpeed() );
+                isInsideTheWorld = true;
             }
-            fireCounter += delta;
+
         }
 
         if (!worldBounds.isInside(center) && center.y < worldBounds.getBottom()) {
             destroy();
         }
+    }
+
+    /**
+     * Destroys the object.
+     */
+    @Override
+    public void destroy() {
+        super.destroy();
+        isInsideTheWorld = false;
     }
 
     @Override
@@ -56,11 +71,7 @@ public class EnemyShip extends SpaceShip implements Destroyable {
     public void setDestination(final Vector2 position) {
         stop();
         destination.set( position );
-        velocity.set( destination.cpy().sub(center) ).setLength( spaceShipType.getSpeed() );
-
-//        System.out.println("Current coordinates: " + center );
-//        System.out.println("Destination coordinates: " + destination );
-//        System.out.println("Velocity = " + velocity);
+        velocity.set( destination.cpy().sub(center) ).setLength( FAR_SPACE_SPEED );
     }
 
     /**
@@ -76,4 +87,6 @@ public class EnemyShip extends SpaceShip implements Destroyable {
                 || bullet.getTop() < getCenter().y
         );
     }
+
+
 }
