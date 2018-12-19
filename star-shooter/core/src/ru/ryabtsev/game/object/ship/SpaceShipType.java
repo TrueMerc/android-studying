@@ -51,7 +51,7 @@ public class SpaceShipType {
 
     /**
      * Returns specific texture region for given space ship type.
-     * @param - texture region number.
+     * @param number texture region number.
      */
     public TextureRegion getTextureRegion(int number) {
         return textureRegions[number];

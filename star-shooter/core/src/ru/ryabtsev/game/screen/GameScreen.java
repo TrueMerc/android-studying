@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.List;
 
@@ -14,7 +15,6 @@ import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.Destroyable;
 import ru.ryabtsev.game.object.Sprite;
 import ru.ryabtsev.game.object.Weapon;
-import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
 import ru.ryabtsev.game.object.button.Button;
@@ -29,6 +29,7 @@ import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
+import ru.ryabtsev.game.text.Font;
 import ru.ryabtsev.game.utils.Collisions;
 import ru.ryabtsev.game.utils.Regions;
 
@@ -39,6 +40,11 @@ public class GameScreen extends Base2DScreen {
 
     private static final float KEYBOARD_MOVEMENT_STEP = 0.5f;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.001f;
+
+    private static final float DEFAULT_FONT_SIZE = 0.025f;
+    private static final String FRAGS_LABEL = "Frags: ";
+    private static final String HIT_POINTS_LABEL = "HP: ";
+    private static final String LEVEL_LABEL = "Level: ";
 
     private TextureAtlas gameScreenTextures;
 
@@ -58,9 +64,18 @@ public class GameScreen extends Base2DScreen {
     private Button newGameButton;
     private Sprite gameOverMessage;
 
+    private Font font;
+    private StringBuilder stringBuilder;
+
     private float enemyResurrectionCounter = 0f;
 
+    private int frags = 0;
+    private int level = 0;
 
+    /**
+     * Constructor
+     * @param game game instance.
+     */
     public GameScreen(StarShooterGame game) {
         super(game);
 
@@ -104,10 +119,15 @@ public class GameScreen extends Base2DScreen {
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(gameScreenTextures, explosionSound);
+
+        font = new Font("fonts/font.fnt", "fonts/font.png");
+        font.resize( DEFAULT_FONT_SIZE );
+
+        stringBuilder = new StringBuilder();
     }
 
-    private void initPlayer() {
 
+    private void initPlayer() {
         TextureRegion[] textureRegions = new TextureRegion[1];
         textureRegions[0] = gameScreenTextures.findRegion("PlayerShip");
 
@@ -235,12 +255,22 @@ public class GameScreen extends Base2DScreen {
             moveRightButton.draw(batch);
             playerShip.draw(batch);
             explosionPool.drawActiveSprites(batch);
+            drawStatistics();
         }
         else {
             gameOverMessage.draw(batch);
             newGameButton.draw(batch);
         }
         batch.end();
+    }
+
+    private void drawStatistics() {
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(FRAGS_LABEL).append(frags), worldBounds.getLeft(), worldBounds.getTop());
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(HIT_POINTS_LABEL).append(playerShip.getHitPoints()), 0f, worldBounds.getTop(), Align.center);
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(LEVEL_LABEL).append(level), worldBounds.getRight(), worldBounds.getTop(), Align.right);
     }
 
     @Override
@@ -307,7 +337,6 @@ public class GameScreen extends Base2DScreen {
 
     /**
      * Moves player's ship left.
-     * @return
      */
     public void moveShipLeft() {
         playerShip.setDestination(playerShip.getCenter().cpy().sub(KEYBOARD_MOVEMENT_STEP, 0));
