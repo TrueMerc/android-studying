@@ -40,6 +40,7 @@ public class GameScreen extends Base2DScreen {
 
     private static final float KEYBOARD_MOVEMENT_STEP = 0.5f;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.001f;
+    private static final float NEXT_LEVEL_FRAG_SCALE = 0.5f;
 
     private static final float DEFAULT_FONT_SIZE = 0.025f;
     private static final String FRAGS_LABEL = "Frags: ";
@@ -71,6 +72,7 @@ public class GameScreen extends Base2DScreen {
 
     private int frags = 0;
     private int level = 0;
+    private int nextLevelFrags = 5;
 
     /**
      * Constructor
@@ -205,10 +207,18 @@ public class GameScreen extends Base2DScreen {
     }
 
     private void processCollisions() {
-        Collisions.process( playerShip, enemyShips, bulletPool );
+        frags += Collisions.process( playerShip, enemyShips, bulletPool );
         if( playerShip.isDestroyed() ) {
             gameOver();
         }
+        if( frags >= nextLevelFrags ) {
+            levelUp();
+        }
+    }
+
+    private void levelUp() {
+        ++level;
+        nextLevelFrags +=  NEXT_LEVEL_FRAG_SCALE * nextLevelFrags > 1f ? (int)(1f + NEXT_LEVEL_FRAG_SCALE) * nextLevelFrags : nextLevelFrags;
     }
 
     private void gameOver() {
