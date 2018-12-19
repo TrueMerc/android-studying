@@ -12,17 +12,16 @@ import ru.ryabtsev.game.object.Sprite;
  */
 abstract public class Button extends Sprite {
 
-    private static final float DEFAULT_HEIGHT = 0.15f;
-
     private static final float SCALE_WHEN_SELECTED = 1.25f;
 
     /**
-     * Constructor.
-     * @param region - sprite object texture.
+     * Creates button with given texture region and height.
+     * @param region region which contains sprite object texture.
+     * @param height button height in the game world coordinates.
      */
-    Button(final TextureRegion region) {
+    Button(final TextureRegion region, float height) {
         super(region);
-        setHeight(DEFAULT_HEIGHT);
+        setHeight(height);
     }
 
     /**

@@ -8,7 +8,7 @@ import ru.ryabtsev.game.screen.GameScreen;
 /**
  * Game screen button which controls player space ship fire.
  */
-public class FireButton extends Button {
+public final class FireButton extends ControlButton {
 
     private GameScreen gameScreen;
 

@@ -8,12 +8,12 @@ import ru.ryabtsev.game.StarShooterGame;
 /**
  * Menu screen button which starts new game.
  */
-public class PlayButton extends Button {
+public final class PlayButton extends MenuButton {
 
     private StarShooterGame game;
 
     /**
-     * Constructor.
+     * Creates new start/continue game button.
      * @param region sprite object texture.
      * @param game game.
      */

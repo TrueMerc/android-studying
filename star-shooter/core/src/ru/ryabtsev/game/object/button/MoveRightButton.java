@@ -8,7 +8,7 @@ import ru.ryabtsev.game.screen.GameScreen;
 /**
  * Button which moves players ship left.
  */
-public class MoveRightButton extends Button {
+public final class MoveRightButton extends ControlButton {
 
     private GameScreen gameScreen;
 
