@@ -8,18 +8,17 @@ import ru.ryabtsev.game.StarShooterGame;
 /**
  * Starts new game after old game is over.
  */
-public class NewGameButton extends MenuButton {
+public class NewGameButton extends ControlButton {
 
     private StarShooterGame game;
 
     /**
      * Constructor.
-     * @param region   - sprite object texture.
-     * @param position - position on the screen.
+     * @param region sprite object texture.
      * @param game - game instance.
      */
-    public NewGameButton(TextureRegion region, Vector2 position, StarShooterGame game) {
-        super(region, position);
+    public NewGameButton(TextureRegion region, StarShooterGame game) {
+        super(region);
         this.game = game;
     }
 

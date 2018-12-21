@@ -7,14 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Exit button.
  */
-public class ExitButton extends MenuButton {
+public final class ExitButton extends MenuButton {
     /**
      * Constructor.
      * @param region   - sprite object texture.
-     * @param position - position on the screen.
      */
-    public ExitButton(TextureRegion region, Vector2 position) {
-        super(region, position);
+    public ExitButton(TextureRegion region) {
+        super(region);
     }
 
     @Override

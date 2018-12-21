@@ -1,0 +1,40 @@
+package ru.ryabtsev.game.object.button;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+
+import ru.ryabtsev.game.screen.GameScreen;
+
+/**
+ * Button which moves players ship left.
+ */
+public final class MoveRightButton extends ControlButton {
+
+    private GameScreen gameScreen;
+
+    /**
+     * Constructor.
+     * @param region texture region corresponding button image.
+     * @param gameScreen game screen.
+     */
+    public MoveRightButton(final TextureRegion region, final GameScreen gameScreen) {
+        super(region);
+        this.gameScreen = gameScreen;
+    }
+
+    /**
+     * Moves player ship left when touched.
+     * @param touchPosition touch position.
+     * @return true if button is touched or false if it isn't.
+     */
+    @Override
+    public boolean onTouchDown(Vector2 touchPosition) {
+        if( isInside(touchPosition)) {
+            gameScreen.moveRight();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}

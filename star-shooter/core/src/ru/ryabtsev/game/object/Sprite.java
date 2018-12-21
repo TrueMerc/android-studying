@@ -108,7 +108,11 @@ public class Sprite extends Rectangle {
         return angle;
     }
 
-    public void setAngle(float angle) {
+    /**
+     * Rotates sprite counterclockwise to given angel
+     * @param angle
+     */
+    public void rotate(float angle) {
         this.angle = angle;
     }
 

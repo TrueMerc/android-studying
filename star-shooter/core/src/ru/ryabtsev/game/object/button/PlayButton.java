@@ -5,18 +5,20 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.ryabtsev.game.StarShooterGame;
 
-public class PlayButton extends MenuButton {
+/**
+ * Menu screen button which starts new game.
+ */
+public final class PlayButton extends MenuButton {
 
-    StarShooterGame game;
+    private StarShooterGame game;
 
     /**
-     * Constructor.
-     * @param region - sprite object texture.
-     * @param position - position on the screen.
-     * @param game - game.
+     * Creates new start/continue game button.
+     * @param region sprite object texture.
+     * @param game game.
      */
-    public PlayButton(TextureRegion region, Vector2 position, StarShooterGame game) {
-        super(region, position);
+    public PlayButton(TextureRegion region, StarShooterGame game) {
+        super(region);
         this.game = game;
     }
 
@@ -26,8 +28,6 @@ public class PlayButton extends MenuButton {
             game.setScreen(StarShooterGame.ScreenType.GAME);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 }

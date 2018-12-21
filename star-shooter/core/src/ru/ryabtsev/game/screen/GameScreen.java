@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.List;
 
@@ -14,10 +15,12 @@ import ru.ryabtsev.game.StarShooterGame;
 import ru.ryabtsev.game.object.Destroyable;
 import ru.ryabtsev.game.object.Sprite;
 import ru.ryabtsev.game.object.Weapon;
-import ru.ryabtsev.game.object.bullet.Bullet;
 import ru.ryabtsev.game.object.bullet.BulletPool;
 import ru.ryabtsev.game.object.bullet.BulletType;
-import ru.ryabtsev.game.object.button.MenuButton;
+import ru.ryabtsev.game.object.button.Button;
+import ru.ryabtsev.game.object.button.FireButton;
+import ru.ryabtsev.game.object.button.MoveLeftButton;
+import ru.ryabtsev.game.object.button.MoveRightButton;
 import ru.ryabtsev.game.object.button.NewGameButton;
 import ru.ryabtsev.game.object.explosion.ExplosionPool;
 import ru.ryabtsev.game.object.ship.EnemyShip;
@@ -26,6 +29,8 @@ import ru.ryabtsev.game.object.ship.PlayerShip;
 import ru.ryabtsev.game.object.ship.SpaceShipType;
 import ru.ryabtsev.game.object.ship.SpaceShip;
 
+import ru.ryabtsev.game.text.Font;
+import ru.ryabtsev.game.utils.Collisions;
 import ru.ryabtsev.game.utils.Regions;
 
 /**
@@ -33,8 +38,14 @@ import ru.ryabtsev.game.utils.Regions;
  */
 public class GameScreen extends Base2DScreen {
 
-    private static final float KEYBOARD_MOVEMENT_STEP = 0.05f;
+    private static final float KEYBOARD_MOVEMENT_STEP = 0.5f;
     private static final float PLAYER_SPACE_SHIP_SPEED = 0.001f;
+    private static final float NEXT_LEVEL_FRAG_SCALE = 0.5f;
+
+    private static final float DEFAULT_FONT_SIZE = 0.025f;
+    private static final String FRAGS_LABEL = "Frags: ";
+    private static final String HIT_POINTS_LABEL = "HP: ";
+    private static final String LEVEL_LABEL = "Level: ";
 
     private TextureAtlas gameScreenTextures;
 
@@ -48,12 +59,25 @@ public class GameScreen extends Base2DScreen {
     private SpaceShipType[] enemyShipTypes = new SpaceShipType[3];
     private EnemyShipPool enemyShips;
 
-    private MenuButton newGameButton;
+    private Button fireButton;
+    private Button moveLeftButton;
+    private Button moveRightButton;
+    private Button newGameButton;
     private Sprite gameOverMessage;
+
+    private Font font;
+    private StringBuilder stringBuilder;
 
     private float enemyResurrectionCounter = 0f;
 
+    private int frags = 0;
+    private int level = 0;
+    private int nextLevelFrags = 5;
 
+    /**
+     * Constructor
+     * @param game game instance.
+     */
     public GameScreen(StarShooterGame game) {
         super(game);
 
@@ -70,20 +94,42 @@ public class GameScreen extends Base2DScreen {
 
         newGameButton = new NewGameButton(
                 gameScreenTextures.findRegion("ButtonNewGame"),
-                new Vector2(0, -0.2f),
                 game
         );
         newGameButton.setHeight(0.05f);
+
+        fireButton = new FireButton(
+                gameScreenTextures.findRegion("ButtonFire"),
+                this
+        );
+        fireButton.setHeight(0.15f);
+
+        moveLeftButton = new MoveLeftButton(
+                gameScreenTextures.findRegion("Triangle"),
+                this
+        );
+        moveLeftButton.rotate(270f);
+
+        moveRightButton = new MoveRightButton(
+                gameScreenTextures.findRegion("Triangle"),
+                this
+        );
+        moveRightButton.rotate(90f);
 
         bulletPool = new BulletPool();
         fireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser-shoot.wav"));
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(gameScreenTextures, explosionSound);
+
+        font = new Font("fonts/font.fnt", "fonts/font.png");
+        font.resize( DEFAULT_FONT_SIZE );
+
+        stringBuilder = new StringBuilder();
     }
 
-    private void initPlayer() {
 
+    private void initPlayer() {
         TextureRegion[] textureRegions = new TextureRegion[1];
         textureRegions[0] = gameScreenTextures.findRegion("PlayerShip");
 
@@ -95,7 +141,7 @@ public class GameScreen extends Base2DScreen {
         Weapon weapon = new Weapon(bulletType, fireSound, 0.5f);
 
         SpaceShipType playerShipType = new SpaceShipType( textureRegions,
-                weapon, 0.1f, PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
+                weapon, 0.2f, 2* PLAYER_SPACE_SHIP_SPEED, 40, "Player space ship"
         );
 
         playerShip = new PlayerShip(playerShipType, bulletPool, explosionPool, worldBounds);
@@ -116,7 +162,7 @@ public class GameScreen extends Base2DScreen {
             textureRegions = Regions.split( region, 1, 2, 2);
 
             enemyShipTypes[i] = new SpaceShipType( textureRegions,
-                    weapon, 0.1f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 10 * (i + 1), "Enemy space ship"
+                    weapon, 0.15f * (1f + 0.25f * i), PLAYER_SPACE_SHIP_SPEED / (i + 1), 10 * (i + 1), "Enemy space ship"
             );
         }
         enemyShips = new EnemyShipPool(enemyShipTypes, bulletPool, explosionPool, worldBounds);
@@ -126,7 +172,7 @@ public class GameScreen extends Base2DScreen {
     public void show() {
        super.show();
        if( game.getState() == StarShooterGame.State.NEW) {
-           playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + playerShip.getHeight()));
+           playerShip.moveTo(new Vector2(0, worldBounds.getBottom() + 2 * playerShip.getHeight()));
        }
        if( game.getState() != StarShooterGame.State.OVER ) {
            game.setState(StarShooterGame.State.PLAYING);
@@ -138,7 +184,7 @@ public class GameScreen extends Base2DScreen {
         super.render(delta);
         if( game.getState() == StarShooterGame.State.PLAYING) {
             update(delta);
-            checkCollisions();
+            processCollisions();
             deleteAllDestroyed();
         }
         draw();
@@ -160,49 +206,19 @@ public class GameScreen extends Base2DScreen {
         }
     }
 
-    private void checkCollisions() {
-        List<EnemyShip> enemyList = enemyShips.getActiveObjects();
-        for (EnemyShip enemy : enemyList) {
-            if (enemy.isDestroyed()) {
-                continue;
-            }
-            float minDist = enemy.getWidth() / 2 + playerShip.getWidth() / 2;
-            if (enemy.getCenter().dst2(playerShip.getCenter()) < minDist * minDist) {
-                int enemyHitPoints = enemy.getHitPoints();
-                enemy.damage(2 * playerShip.getHitPoints());
-                playerShip.damage(2 * enemyHitPoints);
-                return;
-            }
-        }
-
-        List<Bullet> bulletList = bulletPool.getActiveObjects();
-        for (EnemyShip enemy : enemyList) {
-            if (enemy.isDestroyed()) {
-                continue;
-            }
-            for (Bullet bullet : bulletList) {
-                if (bullet.getOwner() != playerShip || bullet.isDestroyed()) {
-                    continue;
-                }
-                if (enemy.isHit(bullet)) {
-                    enemy.damage(bullet.getDamage());
-                    bullet.destroy();
-                }
-            }
-        }
-
-        for (Bullet bullet : bulletList) {
-            if (bullet.isDestroyed() || bullet.getOwner() == playerShip) {
-                continue;
-            }
-            if (playerShip.isHit(bullet)) {
-                bullet.destroy();
-                playerShip.damage(bullet.getDamage());
-            }
-        }
+    private void processCollisions() {
+        frags += Collisions.process( playerShip, enemyShips, bulletPool );
         if( playerShip.isDestroyed() ) {
             gameOver();
         }
+        if( frags >= nextLevelFrags ) {
+            levelUp();
+        }
+    }
+
+    private void levelUp() {
+        ++level;
+        nextLevelFrags +=  NEXT_LEVEL_FRAG_SCALE * nextLevelFrags > 1f ? (int)(1f + NEXT_LEVEL_FRAG_SCALE) * nextLevelFrags : nextLevelFrags;
     }
 
     private void gameOver() {
@@ -213,7 +229,7 @@ public class GameScreen extends Base2DScreen {
         destroyList(explosionPool.getActiveObjects());
     }
 
-    private <T extends Destroyable> void  destroyList(List<T> list) {
+    private <T extends Destroyable> void destroyList(List<T> list) {
         for( T element : list) {
             element.destroy();
         }
@@ -241,18 +257,30 @@ public class GameScreen extends Base2DScreen {
     public void draw() {
         super.draw();
         batch.begin();
-        bulletPool.drawActiveSprites(batch);
-        enemyShips.drawActiveSprites(batch);
-
         if (game.getState() != StarShooterGame.State.OVER) {
+            bulletPool.drawActiveSprites(batch);
+            enemyShips.drawActiveSprites(batch);
+            fireButton.draw(batch);
+            moveLeftButton.draw(batch);
+            moveRightButton.draw(batch);
             playerShip.draw(batch);
             explosionPool.drawActiveSprites(batch);
+            drawStatistics();
         }
         else {
             gameOverMessage.draw(batch);
             newGameButton.draw(batch);
         }
         batch.end();
+    }
+
+    private void drawStatistics() {
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(FRAGS_LABEL).append(frags), worldBounds.getLeft(), worldBounds.getTop());
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(HIT_POINTS_LABEL).append(playerShip.getHitPoints()), 0f, worldBounds.getTop(), Align.center);
+        stringBuilder.setLength(0);
+        font.draw(batch, stringBuilder.append(LEVEL_LABEL).append(level), worldBounds.getRight(), worldBounds.getTop(), Align.right);
     }
 
     @Override
@@ -266,7 +294,22 @@ public class GameScreen extends Base2DScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
         playerShip.resize(worldBounds);
+
+        fireButton.resize(worldBounds);
+        fireButton.setLeft(worldBounds.getRight() - fireButton.getWidth());
+        fireButton.setBottom(worldBounds.getBottom());
+
+        moveLeftButton.resize(worldBounds);
+        moveLeftButton.setLeft(worldBounds.getLeft());
+        moveLeftButton.setBottom(worldBounds.getBottom());
+
+        moveRightButton.resize(worldBounds);
+        moveRightButton.setLeft(moveLeftButton.getRight() + 0.01f);
+        moveRightButton.setBottom(worldBounds.getBottom());
+
         gameOverMessage.resize(worldBounds);
+        newGameButton.resize(worldBounds);
+        newGameButton.setPosition( new Vector2(0f, -0.2f) );
     }
 
     @Override
@@ -275,22 +318,22 @@ public class GameScreen extends Base2DScreen {
             switch(keycode) {
                 case Input.Keys.DOWN:
                 case Input.Keys.S:
-                    playerShip.setDestination(playerShip.getCenter().sub(0, KEYBOARD_MOVEMENT_STEP));
-                    break;
+                    playerShip.setDestination(playerShip.getCenter().cpy().sub(0, KEYBOARD_MOVEMENT_STEP));
+                    return true;
                 case Input.Keys.LEFT:
                 case Input.Keys.A:
-                    playerShip.setDestination(playerShip.getCenter().sub(KEYBOARD_MOVEMENT_STEP, 0));
-                    break;
+                    moveLeftButton.onTouchDown(moveLeftButton.getCenter());
+                    return true;
                 case Input.Keys.RIGHT:
                 case Input.Keys.D:
-                    playerShip.setDestination(playerShip.getCenter().add(KEYBOARD_MOVEMENT_STEP, 0));
-                    break;
+                    moveRightButton.onTouchDown(moveRightButton.getCenter());
+                    return true;
                 case Input.Keys.UP:
                 case Input.Keys.W:
-                    playerShip.setDestination(playerShip.getCenter().add(0, KEYBOARD_MOVEMENT_STEP));
-                    break;
+                    playerShip.setDestination(playerShip.getCenter().cpy().add(0, KEYBOARD_MOVEMENT_STEP));
+                    return true;
                 case Input.Keys.SPACE:
-                    playerShip.fire();
+                    fireButton.onTouchDown(fireButton.getCenter());
                     return true;
             }
         }
@@ -302,6 +345,20 @@ public class GameScreen extends Base2DScreen {
         return false;
     }
 
+    /**
+     * Moves player's ship left.
+     */
+    public void moveShipLeft() {
+        playerShip.setDestination(playerShip.getCenter().cpy().sub(KEYBOARD_MOVEMENT_STEP, 0));
+    }
+
+    /**
+     * Moves player's ship right.
+     */
+    public void moveRight() {
+        playerShip.setDestination(playerShip.getCenter().cpy().add(KEYBOARD_MOVEMENT_STEP, 0));
+    }
+
     @Override
     public boolean keyUp(int keycode) {
         return super.keyUp(keycode);
@@ -309,22 +366,23 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean mouseMoved(Vector2 position) {
-        if( game.getState() == StarShooterGame.State.OVER) {
+        if(game.getState() == StarShooterGame.State.OVER) {
             newGameButton.onSelect(position);
         }
-
         return true;
     }
 
     @Override
     public boolean touchDown(Vector2 position, int pointer, int button) {
         if( !playerShip.isDestroyed() ) {
-            playerShip.setDestination(position);
+            return (fireButton.onTouchDown(position) ||
+                    moveLeftButton.onTouchDown(position) ||
+                    moveRightButton.onTouchDown(position));
         }
         if( game.getState() == StarShooterGame.State.OVER) {
-            newGameButton.onTouchDown(position);
+            return newGameButton.onTouchDown(position);
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -334,5 +392,13 @@ public class GameScreen extends Base2DScreen {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns player space ship.
+     * @return player space ship.
+     */
+    public SpaceShip getPlayerShip() {
+        return playerShip;
     }
 }
